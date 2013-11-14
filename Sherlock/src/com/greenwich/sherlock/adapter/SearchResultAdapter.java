@@ -1,0 +1,45 @@
+package com.greenwich.sherlock.adapter;
+
+import java.util.List;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+
+import com.greenwich.sherlock.entity.User;
+
+public class SearchResultAdapter extends BaseAdapter {
+	private Context mContext;
+	private List<User> mUsers;
+	private LayoutInflater mInflater;
+	
+	public SearchResultAdapter(Context context, List<User> users) {
+		this.mContext = context;
+		this.mUsers = users;
+		this.mInflater = LayoutInflater.from(context);
+	}
+	
+	@Override
+	public int getCount() {
+		return mUsers != null ? mUsers.size() : 0;
+	}
+
+	@Override
+	public Object getItem(int position) {
+		return mUsers.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		
+		return null;
+	}
+
+}
