@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
+import com.greenwich.sherlock.R;
 import com.greenwich.sherlock.entity.User;
 
 public class SearchResultAdapter extends BaseAdapter {
@@ -38,8 +40,25 @@ public class SearchResultAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
-		return null;
+		final ViewHolder holder;
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.search_result_item, null);
+
+            holder = new ViewHolder();
+            holder.name = (TextView) convertView.findViewById(R.id.name);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        holder.name.setText(mUsers.get(position).getUsername());
+        
+        return convertView;
 	}
+	
+	static class ViewHolder {
+        TextView name;
+    }
 
 }

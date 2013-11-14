@@ -1,5 +1,7 @@
 package com.greenwich.sherlock;
 
+import com.greenwich.sherlock.util.Config;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
