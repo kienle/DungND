@@ -11,5 +11,6 @@
     <string name="login">Login</string>
     <string name="bt_new">New</string>
     <string name="input_name_to_search">Input name to search</string>
+    <string name="save">Save</string>
 
 </resources>

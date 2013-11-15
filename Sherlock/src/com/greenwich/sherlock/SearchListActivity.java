@@ -47,6 +47,12 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 			User user = new User();
 			user.setId(i);
 			user.setUsername("Name " + i);
+			user.setGender("Gay");
+			user.setHeight(160);
+			user.setAgeFrom(i);
+			user.setAgeTo(i + 10);
+			user.setHairColor("Vang");
+			user.setComment("No comment");
 			
 			mUsers.add(user);
 		}

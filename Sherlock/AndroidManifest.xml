@@ -25,11 +25,15 @@
         <activity
             android:name=".SearchListActivity"
             android:screenOrientation="portrait" 
-            ></activity>
+            />
         <activity
             android:name=".UserFormActivity"
             android:screenOrientation="portrait" 
-            ></activity>
+            />
+        <activity
+            android:name=".AddLocationActivity"
+            android:screenOrientation="portrait" 
+            />
     </application>
 
 </manifest>

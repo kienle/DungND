@@ -23,6 +23,10 @@ public class LoginActivity extends Activity implements OnClickListener {
         
         mEtUsername = (EditText) findViewById(R.id.etUsername);
         mEtPassword = (EditText) findViewById(R.id.etPassword);
+        
+        mEtUsername.setText(Config.USERNAME);
+        mEtPassword.setText(Config.PASSWORD);
+        
         mBtLogin = (Button) findViewById(R.id.btLogin);
         mBtLogin.setOnClickListener(this);
         
