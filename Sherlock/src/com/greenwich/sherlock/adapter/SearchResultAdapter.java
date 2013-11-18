@@ -22,7 +22,12 @@ public class SearchResultAdapter extends BaseAdapter {
 		this.mUsers = users;
 		this.mInflater = LayoutInflater.from(context);
 	}
-	
+
+	public void setmUsers(List<User> mUsers) {
+		this.mUsers = mUsers;
+		this.notifyDataSetChanged();
+	}
+
 	@Override
 	public int getCount() {
 		return mUsers != null ? mUsers.size() : 0;

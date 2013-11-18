@@ -1,5 +1,6 @@
 package com.greenwich.sherlock;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -11,16 +12,21 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.greenwich.sherlock.adapter.SearchResultAdapter;
 import com.greenwich.sherlock.database.UserDataSource;
 import com.greenwich.sherlock.entity.User;
+import com.greenwich.sherlock.util.Config;
 
 public class SearchListActivity extends Activity implements OnClickListener, OnItemClickListener {
-	public static final String USER = "user";
 	
 	private Button mBtNew;
+	
+	private EditText mEtSearch;
+	private Button mBtSearch;
+	
 	private ListView mLvResult;
 	private SearchResultAdapter mAdapter;
 	private List<User> mUsers;
@@ -39,35 +45,32 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 		mBtNew = (Button) findViewById(R.id.btNew);
 		mBtNew.setOnClickListener(this);
 		
+		mEtSearch = (EditText) findViewById(R.id.etSearch);
+		mBtSearch = (Button) findViewById(R.id.btSearch);
+		mBtSearch.setOnClickListener(this);
+		
 		mLvResult = (ListView) findViewById(R.id.lvSearchResult);
 		
-		mUsers = mUserDataSource.getAllUser();
-		
-		for (int i = 0; i < 50; i++) {
-			User user = new User();
-			user.setId(i);
-			user.setUsername("Name " + i);
-			user.setGender("Gay");
-			user.setHeight(160);
-			user.setAgeFrom(i);
-			user.setAgeTo(i + 10);
-			user.setHairColor("Vang");
-			user.setComment("No comment");
-			
-			mUsers.add(user);
-		}
-		
-		mAdapter = new SearchResultAdapter(this, mUsers);
-		
-		mLvResult.setAdapter(mAdapter);
+//		mUsers = mUserDataSource.getAllUser();
+//		mAdapter = new SearchResultAdapter(this, mUsers);
+//		mLvResult.setAdapter(mAdapter);
 		mLvResult.setOnItemClickListener(this);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		mUsers = mUserDataSource.getAllUser();
+		mAdapter = new SearchResultAdapter(this, mUsers);
+		mLvResult.setAdapter(mAdapter);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Intent intent = new Intent(SearchListActivity.this, UserFormActivity.class);
-		intent.putExtra(USER, mUsers.get(position));
+		Intent intent = new Intent(SearchListActivity.this, ViewUserInfoActivity.class);
+		intent.putExtra(Config.USER_OBJECT, mUsers.get(position));
 		startActivity(intent);
 	}
 
@@ -76,6 +79,16 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 		if (v == mBtNew) {
 			Intent intent = new Intent(SearchListActivity.this, UserFormActivity.class);
 			startActivity(intent);
+		} else if (v == mBtSearch) {
+			String keySearch = mEtSearch.getText().toString().trim();
+			List<User> searchResults = new ArrayList<User>();
+			for (User user : mUsers) {
+				if (user.getUsername().toLowerCase().contains(keySearch.toLowerCase())) {
+					searchResults.add(user);
+				}
+			}
+			mAdapter.setmUsers(searchResults);
 		}
 	}
+		
 }

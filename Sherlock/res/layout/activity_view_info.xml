@@ -8,9 +8,11 @@
         android:id="@+id/ivPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:background="@drawable/ic_launcher"
+        android:layout_gravity="center_horizontal"
         />
-
+    
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
@@ -25,16 +27,16 @@
     		<TextView 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:text="Name (*)"
+	            android:text="@string/name"
+	            android:textStyle="bold"
 	            />
 	        
-	        <EditText 
-	            android:id="@+id/etName"
+	        <TextView 
+	            android:id="@+id/tvName"
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="5dp"
 	            android:layout_weight="1"
-	            android:hint="Name of Person"
 	            />        
         </TableRow>
         
@@ -48,16 +50,16 @@
     		<TextView 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:text="Gender (*)"
+	            android:text="@string/gender"
+	            android:textStyle="bold"
 	            />
 	        
-	        <EditText 
-	            android:id="@+id/etGender"
+	        <TextView 
+	            android:id="@+id/tvGender"
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="5dp"
 	            android:layout_weight="1"
-	            android:hint="Gender"
 	            />        
         </TableRow>
         <TableRow
@@ -70,17 +72,16 @@
     		<TextView 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:text="Heigh (*)"
+	            android:text="@string/heigh"
+	            android:textStyle="bold"
 	            />
 	        
-	        <EditText 
-	            android:id="@+id/etHeight"
+	        <TextView 
+	            android:id="@+id/tvHeight"
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="5dp"
 	            android:layout_weight="1"
-	            android:hint="Height in cm"
-	            android:inputType="number"
 	            />        
         </TableRow>
         <TableRow
@@ -93,17 +94,16 @@
     		<TextView 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:text="Age From (*)"
+	            android:text="@string/age_from"
+	            android:textStyle="bold"
 	            />
 	        
-	        <EditText 
-	            android:id="@+id/etAgeFrom"
+	        <TextView 
+	            android:id="@+id/tvAgeFrom"
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="5dp"
 	            android:layout_weight="1"
-	            android:hint="Age From"
-	            android:inputType="number"
 	            />        
         </TableRow>
         <TableRow
@@ -116,17 +116,16 @@
     		<TextView 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:text="Age To (*)"
+	            android:text="@string/age_to"
+	            android:textStyle="bold"
 	            />
 	        
-	        <EditText 
-	            android:id="@+id/etAgeTo"
+	        <TextView 
+	            android:id="@+id/tvAgeTo"
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="5dp"
 	            android:layout_weight="1"
-	            android:hint="Age To"
-	            android:inputType="number"
 	            />        
         </TableRow>
         <TableRow
@@ -139,16 +138,16 @@
     		<TextView 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:text="Hair color"
+	            android:text="@string/hair_color"
+	            android:textStyle="bold"
 	            />
 	        
-	        <EditText 
-	            android:id="@+id/etHairColor"
+	        <TextView 
+	            android:id="@+id/tvHairColor"
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="5dp"
 	            android:layout_weight="1"
-	            android:hint="Hair color"
 	            />        
         </TableRow>
         <TableRow
@@ -161,26 +160,27 @@
     		<TextView 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:text="Additional Comment"
+	            android:text="@string/additional_comment"
+	            android:textStyle="bold"
 	            />
 	        
-	        <EditText 
-	            android:id="@+id/etComment"
+	        <TextView 
+	            android:id="@+id/tvComment"
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="5dp"
 	            android:layout_weight="1"
-	            android:lines="4"
 	            />        
         </TableRow>
     </TableLayout>
     
     <Button 
-        android:id="@+id/btSave"
+        android:id="@+id/btAddLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/save"
+        android:text="@string/add_location"
         android:layout_gravity="right"
         />
+
 </LinearLayout>

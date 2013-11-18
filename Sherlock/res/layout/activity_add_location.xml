@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <ImageButton 
+        android:id="@+id/ibLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/location"
+        android:layout_gravity="center_horizontal"
+        />
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >

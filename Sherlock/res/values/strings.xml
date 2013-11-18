@@ -12,5 +12,14 @@
     <string name="bt_new">New</string>
     <string name="input_name_to_search">Input name to search</string>
     <string name="save">Save</string>
+    <string name="search">Search</string>
+    <string name="name">Name</string>
+    <string name="gender">Gender</string>
+    <string name="heigh">Heigh</string>
+    <string name="age_from">Age From</string>
+    <string name="age_to">Age To</string>
+    <string name="hair_color">Hair color</string>
+    <string name="additional_comment">Additional Comment</string>
+    <string name="add_location">Add Location</string>
 
 </resources>

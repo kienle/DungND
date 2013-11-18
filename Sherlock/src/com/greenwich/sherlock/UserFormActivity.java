@@ -1,47 +1,21 @@
 package com.greenwich.sherlock;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.greenwich.sherlock.database.UserDataSource;
 import com.greenwich.sherlock.entity.User;
+import com.greenwich.sherlock.util.Config;
 
 public class UserFormActivity extends Activity implements OnClickListener {
-	
-	private static final int ACTION_TAKE_PHOTO_B = 1;
-	private static final String BITMAP_STORAGE_KEY = "viewbitmap";
-	private static final String IMAGEVIEW_VISIBILITY_STORAGE_KEY = "imageviewvisibility";
-	private ImageView mImageView;
-	private Bitmap mImageBitmap;
-
-	private String mCurrentPhotoPath;
-
-	private static final String JPEG_FILE_PREFIX = "IMG_";
-	private static final String JPEG_FILE_SUFFIX = ".jpg";
-
-	private AlbumStorageDirFactory mAlbumStorageDirFactory = null;
 	
 	private EditText mEtName;
 	private EditText mEtGender;
@@ -50,16 +24,12 @@ public class UserFormActivity extends Activity implements OnClickListener {
 	private EditText mEtAgeTo;
 	private EditText mEtHairColor;
 	private EditText mEtComment;
-	private Button mBtAddLocation;
 	
 	private User mUser;
-	
-	Button.OnClickListener mTakePicOnClickListener = new Button.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
-		}
-	};
+	private ImageView mImageView;
+	private Button mBtSave;
+	private UserDataSource mUserDataSource;
+	private Toast mToast;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +37,10 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_user_form);
+		
+		mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+		mUserDataSource = new UserDataSource(this);
+		mUserDataSource.open();
 		
 		mImageView = (ImageView) findViewById(R.id.ivPhoto);
 		mEtName = (EditText) findViewById(R.id.etName);
@@ -76,23 +50,8 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		mEtAgeTo = (EditText) findViewById(R.id.etAgeTo);
 		mEtHairColor = (EditText) findViewById(R.id.etHairColor);
 		mEtComment = (EditText) findViewById(R.id.etComment);
-		
-		mBtAddLocation = (Button) findViewById(R.id.btAddLocation);
-		mBtAddLocation.setOnClickListener(this);
-
-		mImageBitmap = null;
-
-		setBtnListenerOrDisable( 
-				mImageView, 
-				mTakePicOnClickListener,
-				MediaStore.ACTION_IMAGE_CAPTURE
-		);
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-			mAlbumStorageDirFactory = new FroyoAlbumDirFactory();
-		} else {
-			mAlbumStorageDirFactory = new BaseAlbumDirFactory();
-		}
+		mBtSave = (Button) findViewById(R.id.btSave);
+		mBtSave.setOnClickListener(this);
 		
 		Intent intent = getIntent();
 		
@@ -100,7 +59,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 			return;
 		}
 		
-		mUser = (User) intent.getSerializableExtra(SearchListActivity.USER);
+		mUser = (User) intent.getSerializableExtra(Config.USER_OBJECT);
 		if (mUser != null) {
 			mEtName.setText(mUser.getUsername());
 			mEtGender.setText(mUser.getGender());
@@ -115,222 +74,39 @@ public class UserFormActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (v == mBtAddLocation) {
-			Intent intent = new Intent(UserFormActivity.this, AddLocationActivity.class);
-			startActivity(intent);
-		}
-	}
-	
-	/* Photo album for this application */
-	private String getAlbumName() {
-		return "Sherlock";
-	}
-
-	
-	private File getAlbumDir() {
-		File storageDir = null;
-
-		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			
-			storageDir = mAlbumStorageDirFactory.getAlbumStorageDir(getAlbumName());
-
-			if (storageDir != null) {
-				if (! storageDir.mkdirs()) {
-					if (! storageDir.exists()){
-						Log.d("CameraSample", "failed to create directory");
-						return null;
-					}
+		if (v == mBtSave) {
+			if (checkRequireField()) {
+				User user = new User();
+				user.setUsername(mEtName.getText().toString().trim());
+				user.setGender(mEtGender.getText().toString().trim());
+				user.setHeight(Integer.parseInt(mEtHeight.getText().toString().trim()));
+				user.setAgeFrom(Integer.parseInt(mEtAgeFrom.getText().toString().trim()));
+				user.setAgeTo(Integer.parseInt(mEtAgeTo.getText().toString().trim()));
+				user.setHairColor(mEtHairColor.getText().toString().trim());
+				user.setComment(mEtComment.getText().toString().trim());
+				
+				long result = mUserDataSource.insertUser(user);
+				if (result != -1) {
+					Intent intent = new Intent(UserFormActivity.this, ViewUserInfoActivity.class);
+					intent.putExtra(Config.USER_OBJECT, user);
+					startActivity(intent);
 				}
 			}
-			
-		} else {
-			Log.v(getString(R.string.app_name), "External storage is not mounted READ/WRITE.");
 		}
-		
-		return storageDir;
 	}
-
-	private File createImageFile() throws IOException {
-		// Create an image file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
-		File albumF = getAlbumDir();
-		File imageF = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, albumF);
-		return imageF;
-	}
-
-	private File setUpPhotoFile() throws IOException {
-		
-		File f = createImageFile();
-		mCurrentPhotoPath = f.getAbsolutePath();
-		
-		return f;
-	}
-
-	private void setPic() {
-
-		/* There isn't enough memory to open up more than a couple camera photos */
-		/* So pre-scale the target bitmap into which the file is decoded */
-
-		/* Get the size of the ImageView */
-		int targetW = mImageView.getWidth();
-		int targetH = mImageView.getHeight();
-
-		/* Get the size of the image */
-		BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-		bmOptions.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-		int photoW = bmOptions.outWidth;
-		int photoH = bmOptions.outHeight;
-		
-		/* Figure out which way needs to be reduced less */
-		int scaleFactor = 1;
-		if ((targetW > 0) || (targetH > 0)) {
-			scaleFactor = Math.min(photoW/targetW, photoH/targetH);	
-		}
-
-		/* Set bitmap options to scale the image decode target */
-		bmOptions.inJustDecodeBounds = false;
-		bmOptions.inSampleSize = scaleFactor;
-		bmOptions.inPurgeable = true;
-
-		/* Decode the JPEG file into a Bitmap */
-		Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-		
-		/* Associate the Bitmap to the ImageView */
-		mImageView.setImageBitmap(bitmap);
-		mImageView.setVisibility(View.VISIBLE);
-	}
-
-	private void galleryAddPic() {
-		    Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
-			File f = new File(mCurrentPhotoPath);
-		    Uri contentUri = Uri.fromFile(f);
-		    mediaScanIntent.setData(contentUri);
-		    this.sendBroadcast(mediaScanIntent);
-	}
-
-	private void dispatchTakePictureIntent(int actionCode) {
-
-		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-		switch(actionCode) {
-		case ACTION_TAKE_PHOTO_B:
-			File f = null;
-			
-			try {
-				f = setUpPhotoFile();
-				mCurrentPhotoPath = f.getAbsolutePath();
-				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-			} catch (IOException e) {
-				e.printStackTrace();
-				f = null;
-				mCurrentPhotoPath = null;
-			}
-			break;
-
-		default:
-			break;			
-		} // switch
-
-		startActivityForResult(takePictureIntent, actionCode);
-	}
-
-//	private void handleSmallCameraPhoto(Intent intent) {
-//		Bundle extras = intent.getExtras();
-//		mImageBitmap = (Bitmap) extras.get("data");
-//		mImageView.setImageBitmap(mImageBitmap);
-//		mImageView.setVisibility(View.VISIBLE);
-//	}
-
-	private void handleBigCameraPhoto() {
-
-		if (mCurrentPhotoPath != null) {
-			setPic();
-			galleryAddPic();
-			mCurrentPhotoPath = null;
-		}
-
-	}
-
 	
-
-//	Button.OnClickListener mTakePicSOnClickListener = 
-//		new Button.OnClickListener() {
-//		@Override
-//		public void onClick(View v) {
-//			dispatchTakePictureIntent(ACTION_TAKE_PHOTO_S);
-//		}
-//	};
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case ACTION_TAKE_PHOTO_B: {
-			if (resultCode == RESULT_OK) {
-				handleBigCameraPhoto();
-			}
-			break;
-		} // ACTION_TAKE_PHOTO_B
-
-//		case ACTION_TAKE_PHOTO_S: {
-//			if (resultCode == RESULT_OK) {
-//				handleSmallCameraPhoto(data);
-//			}
-//			break;
-//		} // ACTION_TAKE_PHOTO_S
-		} // switch
-	}
-
-	// Some lifecycle callbacks so that the image can survive orientation change
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		outState.putParcelable(BITMAP_STORAGE_KEY, mImageBitmap);
-		outState.putBoolean(IMAGEVIEW_VISIBILITY_STORAGE_KEY, (mImageBitmap != null) );
-		super.onSaveInstanceState(outState);
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		mImageBitmap = savedInstanceState.getParcelable(BITMAP_STORAGE_KEY);
-		mImageView.setImageBitmap(mImageBitmap);
-		mImageView.setVisibility(
-				savedInstanceState.getBoolean(IMAGEVIEW_VISIBILITY_STORAGE_KEY) ? 
-						ImageView.VISIBLE : ImageView.INVISIBLE
-		);
-	}
-
-	/**
-	 * Indicates whether the specified action can be used as an intent. This
-	 * method queries the package manager for installed packages that can
-	 * respond to an intent with the specified action. If no suitable package is
-	 * found, this method returns false.
-	 * http://android-developers.blogspot.com/2009/01/can-i-use-this-intent.html
-	 *
-	 * @param context The application's environment.
-	 * @param action The Intent action to check for availability.
-	 *
-	 * @return True if an Intent with the specified action can be sent and
-	 *         responded to, false otherwise.
-	 */
-	public static boolean isIntentAvailable(Context context, String action) {
-		final PackageManager packageManager = context.getPackageManager();
-		final Intent intent = new Intent(action);
-		List<ResolveInfo> list =
-			packageManager.queryIntentActivities(intent,
-					PackageManager.MATCH_DEFAULT_ONLY);
-		return list.size() > 0;
-	}
-
-	private void setBtnListenerOrDisable(ImageView btn, 
-			Button.OnClickListener onClickListener,
-			String intentName) {
-		if (isIntentAvailable(this, intentName)) {
-			btn.setOnClickListener(onClickListener);        	
-		} else {
-//			btn.setText(getText(R.string.cannot).toString() + " " + btn.getText());
-			btn.setClickable(false);
+	private boolean checkRequireField() {
+		
+		if (mEtName.getText().toString().trim().equals("")
+				|| mEtGender.getText().toString().trim().equals("")
+				|| mEtHeight.getText().toString().trim().equals("")
+				|| mEtAgeFrom.getText().toString().trim().equals("")) {
+			mToast.setText("Required fields have to be filled");
+			mToast.show();
+			
+			return false;
 		}
+		
+		return true;
 	}
 }
