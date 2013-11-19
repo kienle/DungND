@@ -51,14 +51,11 @@
 	            android:text="Gender (*)"
 	            />
 	        
-	        <EditText 
-	            android:id="@+id/etGender"
-	            android:layout_width="0dp"
+	        <Spinner
+	            android:id="@+id/spinner1"
+	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            android:hint="Gender"
-	            />        
+	            />
         </TableRow>
         <TableRow
             android:layout_width="fill_parent"

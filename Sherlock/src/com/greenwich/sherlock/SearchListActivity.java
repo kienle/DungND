@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,16 +12,19 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.greenwich.sherlock.adapter.SearchResultAdapter;
 import com.greenwich.sherlock.database.UserDataSource;
 import com.greenwich.sherlock.entity.User;
 import com.greenwich.sherlock.util.Config;
+import com.greenwich.sherlock.util.DialogUtil;
 
-public class SearchListActivity extends Activity implements OnClickListener, OnItemClickListener {
+public class SearchListActivity extends Activity implements OnClickListener, OnItemClickListener, OnItemLongClickListener {
 	
 	private Button mBtNew;
 	
@@ -31,6 +35,7 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 	private SearchResultAdapter mAdapter;
 	private List<User> mUsers;
 	private UserDataSource mUserDataSource;
+	private User mUserDelete;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,7 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 //		mAdapter = new SearchResultAdapter(this, mUsers);
 //		mLvResult.setAdapter(mAdapter);
 		mLvResult.setOnItemClickListener(this);
+		mLvResult.setOnItemLongClickListener(this);
 	}
 	
 	@Override
@@ -75,6 +81,32 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 	}
 
 	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View view, int position,
+			long id) {
+		mUserDelete = mUsers.get(position);
+		showDialogConfirmDelete();
+		return false;
+	}
+	
+	private void showDialogConfirmDelete() {
+		DialogUtil.createConfirmExistDialog(this, confirmDeleteListenner, R.string.delete_confirm);
+	}
+	
+	DialogInterface.OnClickListener confirmDeleteListenner = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			long result = mUserDataSource.deleteUser(mUserDelete.getId());
+			if (result != -1) {
+				mUsers.remove(mUserDelete);
+				mAdapter.setmUsers(mUsers);
+				Toast.makeText(SearchListActivity.this, "Delete complete!", Toast.LENGTH_SHORT).show();
+				
+			}
+		}
+
+	};
+	
+	@Override
 	public void onClick(View v) {
 		if (v == mBtNew) {
 			Intent intent = new Intent(SearchListActivity.this, UserFormActivity.class);
@@ -90,5 +122,5 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 			mAdapter.setmUsers(searchResults);
 		}
 	}
-		
+
 }

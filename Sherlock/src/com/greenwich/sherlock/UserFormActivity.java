@@ -6,9 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.greenwich.sherlock.database.UserDataSource;
@@ -18,7 +22,8 @@ import com.greenwich.sherlock.util.Config;
 public class UserFormActivity extends Activity implements OnClickListener {
 	
 	private EditText mEtName;
-	private EditText mEtGender;
+//	private EditText mEtGender;
+	private Spinner mPnGender;
 	private EditText mEtHeight;
 	private EditText mEtAgeFrom	;
 	private EditText mEtAgeTo;
@@ -44,7 +49,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		
 		mImageView = (ImageView) findViewById(R.id.ivPhoto);
 		mEtName = (EditText) findViewById(R.id.etName);
-		mEtGender = (EditText) findViewById(R.id.etGender);
+//		mEtGender = (EditText) findViewById(R.id.etGender);
 		mEtHeight = (EditText) findViewById(R.id.etHeight);
 		mEtAgeFrom = (EditText) findViewById(R.id.etAgeFrom);
 		mEtAgeTo = (EditText) findViewById(R.id.etAgeTo);
@@ -53,6 +58,23 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		mBtSave = (Button) findViewById(R.id.btSave);
 		mBtSave.setOnClickListener(this);
 		
+		
+		mPnGender = (Spinner) findViewById(R.id.spinner1);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.gender, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mPnGender.setAdapter(adapter);
+        mPnGender.setOnItemSelectedListener(
+                new OnItemSelectedListener() {
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                        showToast("Spinner1: position=" + position + " id=" + id);
+                    }
+
+                    public void onNothingSelected(AdapterView<?> parent) {
+//                        showToast("Spinner1: unselected");
+                    }
+                });
+        
 		Intent intent = getIntent();
 		
 		if (intent == null) {
@@ -62,7 +84,9 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		mUser = (User) intent.getSerializableExtra(Config.USER_OBJECT);
 		if (mUser != null) {
 			mEtName.setText(mUser.getUsername());
-			mEtGender.setText(mUser.getGender());
+			int selection = mUser.getGender().equals("Male") ? 0 : 1;
+			mPnGender.setSelection(selection);
+//			mEtGender.setText(mUser.getGender());
 			mEtHeight.setText(String.valueOf(mUser.getHeight()));
 			mEtAgeFrom.setText(String.valueOf(mUser.getAgeFrom()));
 			mEtAgeTo.setText(String.valueOf(mUser.getAgeTo()));
@@ -79,7 +103,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 				User user = new User();
 				user.setPhotoPath("");
 				user.setUsername(mEtName.getText().toString().trim());
-				user.setGender(mEtGender.getText().toString().trim());
+				user.setGender(mPnGender.getSelectedItem().toString());
 				user.setHeight(Integer.parseInt(mEtHeight.getText().toString().trim()));
 				user.setAgeFrom(Integer.parseInt(mEtAgeFrom.getText().toString().trim()));
 				user.setAgeTo(Integer.parseInt(mEtAgeTo.getText().toString().trim()));
@@ -97,14 +121,20 @@ public class UserFormActivity extends Activity implements OnClickListener {
 	}
 	
 	private boolean checkRequireField() {
-		
+		int ageFrom = Integer.parseInt(mEtAgeFrom.getText().toString().trim());
+		int ageTo = Integer.parseInt(mEtAgeTo.getText().toString().trim());
 		if (mEtName.getText().toString().trim().equals("")
-				|| mEtGender.getText().toString().trim().equals("")
+				|| mPnGender.getSelectedItem().toString().trim().equals("")
 				|| mEtHeight.getText().toString().trim().equals("")
-				|| mEtAgeFrom.getText().toString().trim().equals("")) {
+				|| mEtAgeFrom.getText().toString().trim().equals("")
+				|| mEtAgeTo.getText().toString().trim().equals("")) {
 			mToast.setText("Required fields have to be filled");
 			mToast.show();
 			
+			return false;
+		} else if (ageTo <= ageFrom) {
+			mToast.setText("Age to must be greater than age from");
+			mToast.show();
 			return false;
 		}
 		

@@ -23,6 +23,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -144,7 +145,10 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 			if (file.exists()) {
 				Bitmap bmp = BitmapFactory.decodeFile(photoPath);
 				mImageView.setImageBitmap(bmp);
+			} else {
+				mImageView.setImageResource(R.drawable.ic_launcher);
 			}
+			
 			mTvName.setText(mUser.getUsername());
 			mTvGender.setText(mUser.getGender());
 			mTvHeight.setText(String.valueOf(mUser.getHeight()));
@@ -377,4 +381,18 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Intent intent = new Intent(ViewUserInfoActivity.this, SearchListActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			finish();
+			return true;
+		}
+
+		return super.onKeyDown(keyCode, event);
+	}
+
 }

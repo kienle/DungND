@@ -33,11 +33,11 @@ public class UserDataSource {
 	}
 
 	public long updateUser(User user) {
-		return database.update(User.TABLE_NAME, getUserContentValues(user), null, null);
+		return database.update(User.TABLE_NAME, getUserContentValues(user), User.COLUMN_ID + "=" + user.getId(), null);
 	}
 	
-	public void deleteUser(int userId) {
-		database.delete(User.TABLE_NAME, User.COLUMN_ID + " = " + userId, null);
+	public long deleteUser(int userId) {
+		return database.delete(User.TABLE_NAME, User.COLUMN_ID + " = " + userId, null);
 	}
 
 	public List<User> getAllUser() {
