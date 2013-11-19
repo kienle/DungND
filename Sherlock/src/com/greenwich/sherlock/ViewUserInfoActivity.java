@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -292,6 +293,16 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		case ACTION_TAKE_PHOTO_B:
 			if (resultCode == RESULT_OK) {
 				handleBigCameraPhoto();
+				
+				Cursor cursor = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, new String[]{Media.DATA, Media.DATE_ADDED, MediaStore.Images.ImageColumns.ORIENTATION}, Media.DATE_ADDED, null, "date_added ASC");
+				if(cursor != null && cursor.moveToFirst())
+				{
+				    do {
+				        Uri uri = Uri.parse(cursor.getString(cursor.getColumnIndex(Media.DATA)));
+				        mCurrentPhotoPath = uri.toString();
+				    }while(cursor.moveToNext());
+				    cursor.close();
+				}
 			}
 			break;
 			
@@ -299,12 +310,12 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 			if(resultCode == RESULT_OK){  
 		        Uri selectedImage = data.getData();
 		        mCurrentPhotoPath = getPath(selectedImage);
-		        Log.d("KienLT", "Image path = " + mCurrentPhotoPath);
 		        mImageView.setImageURI(selectedImage);
 		    }
 			break;
 		} // switch
 		
+		Log.d("KienLT", "Image path = " + mCurrentPhotoPath);
 		mUser.setPhotoPath(mCurrentPhotoPath);
 		mUserDataSource.updateUser(mUser);
 	}
