@@ -6,14 +6,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.greenwich.sherlock.entity.User;
-import com.greenwich.sherlock.util.Config;
-
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -28,10 +28,16 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.greenwich.sherlock.database.UserDataSource;
+import com.greenwich.sherlock.entity.User;
+import com.greenwich.sherlock.util.Config;
 
 public class ViewUserInfoActivity extends Activity implements OnClickListener {
 	
 	private static final int ACTION_TAKE_PHOTO_B = 1;
+	private static final int SELECT_PICTURE = 2;
 	private static final String BITMAP_STORAGE_KEY = "viewbitmap";
 	private static final String IMAGEVIEW_VISIBILITY_STORAGE_KEY = "imageviewvisibility";
 	private Bitmap mImageBitmap;
@@ -54,11 +60,35 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 	private Button mBtAddLocation;
 	private User mUser;
 	
+	private Toast mToast;
+	private UserDataSource mUserDataSource;
 	
 	Button.OnClickListener mTakePicOnClickListener = new Button.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
+			
+			AlertDialog.Builder getImageFrom = new AlertDialog.Builder(ViewUserInfoActivity.this);
+            getImageFrom.setTitle("Select:");
+            final CharSequence[] opsChars = {"From Camera", "From Gallery"};
+            getImageFrom.setItems(opsChars, new android.content.DialogInterface.OnClickListener() {
+
+                @Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (which == 0) {
+						dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
+					} else if (which == 1) {
+						Intent intent = new Intent();
+						intent.setType("image/*");
+						intent.setAction(Intent.ACTION_GET_CONTENT);
+						startActivityForResult(Intent.createChooser(intent, ""), SELECT_PICTURE);
+					}
+					dialog.dismiss();
+				}
+            });
+            
+            getImageFrom.show();
+            
+//			dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
 		}
 	};
 	
@@ -68,6 +98,10 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_view_info);
+		
+		mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+		mUserDataSource = new UserDataSource(this);
+		mUserDataSource.open();
 		
 		mImageView = (ImageView) findViewById(R.id.ivPhoto);
 		
@@ -104,6 +138,12 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		
 		mUser = (User) intent.getSerializableExtra(Config.USER_OBJECT);
 		if (mUser != null) {
+			String photoPath = mUser.getPhotoPath();
+			File file = new File(photoPath);
+			if (file.exists()) {
+				Bitmap bmp = BitmapFactory.decodeFile(photoPath);
+				mImageView.setImageBitmap(bmp);
+			}
 			mTvName.setText(mUser.getUsername());
 			mTvGender.setText(mUser.getGender());
 			mTvHeight.setText(String.valueOf(mUser.getHeight()));
@@ -244,7 +284,6 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 			galleryAddPic();
 			mCurrentPhotoPath = null;
 		}
-
 	}
 
 	@Override
@@ -255,7 +294,19 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 				handleBigCameraPhoto();
 			}
 			break;
+			
+		case SELECT_PICTURE:
+			if(resultCode == RESULT_OK){  
+		        Uri selectedImage = data.getData();
+		        mCurrentPhotoPath = getPath(selectedImage);
+		        Log.d("KienLT", "Image path = " + mCurrentPhotoPath);
+		        mImageView.setImageURI(selectedImage);
+		    }
+			break;
 		} // switch
+		
+		mUser.setPhotoPath(mCurrentPhotoPath);
+		mUserDataSource.updateUser(mUser);
 	}
 
 	// Some lifecycle callbacks so that the image can survive orientation change
@@ -307,4 +358,12 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 			btn.setClickable(false);
 		}
 	}
+	
+	public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
 }

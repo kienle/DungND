@@ -11,6 +11,7 @@ public class User implements Serializable {
 	public static final String TABLE_NAME = "user";
 	
 	public static final String COLUMN_ID = "_id";
+	public static final String COLUMN_PHOTO_PATH = "photo";
 	public static final String COLUMN_USERNAME = "username";
 	public static final String COLUMN_GENDER = "gender";
 	public static final String COLUMN_HEIGHT = "height";
@@ -20,6 +21,7 @@ public class User implements Serializable {
 	public static final String COLUMN_COMMENT = "comment";
 	
 	private int id;
+	private String photoPath;
 	private String username;
 	private String gender;
 	private int height;
@@ -34,6 +36,14 @@ public class User implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getPhotoPath() {
+		return photoPath;
+	}
+
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
 	}
 
 	public String getUsername() {

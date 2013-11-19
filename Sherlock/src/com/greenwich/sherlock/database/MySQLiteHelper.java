@@ -15,6 +15,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	// Database creation album table sql statement
 	private static final String CREATE_ALBUM = "create table " + User.TABLE_NAME
 			+ "(" + User.COLUMN_ID + " integer primary key autoincrement, "
+			+ User.COLUMN_PHOTO_PATH + " text not null, "
 			+ User.COLUMN_USERNAME + " text not null, "
 			+ User.COLUMN_GENDER + " int not null, "
 			+ User.COLUMN_HEIGHT + " int not null, "

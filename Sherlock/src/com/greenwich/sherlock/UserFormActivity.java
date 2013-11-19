@@ -77,6 +77,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		if (v == mBtSave) {
 			if (checkRequireField()) {
 				User user = new User();
+				user.setPhotoPath("");
 				user.setUsername(mEtName.getText().toString().trim());
 				user.setGender(mEtGender.getText().toString().trim());
 				user.setHeight(Integer.parseInt(mEtHeight.getText().toString().trim()));

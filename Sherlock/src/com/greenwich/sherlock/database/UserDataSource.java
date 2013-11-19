@@ -29,18 +29,13 @@ public class UserDataSource {
 	}
 
 	public long insertUser(User user) {
-		ContentValues values = new ContentValues();
-		values.put(User.COLUMN_USERNAME, user.getUsername());
-		values.put(User.COLUMN_GENDER, user.getGender());
-		values.put(User.COLUMN_HEIGHT, user.getHeight());
-		values.put(User.COLUMN_AGE_FROM, user.getAgeFrom());
-		values.put(User.COLUMN_AGE_TO, user.getAgeTo());
-		values.put(User.COLUMN_HAIR_COLOR, user.getHairColor());
-		values.put(User.COLUMN_COMMENT, user.getComment());
-		
-		return database.insert(User.TABLE_NAME, null, values);
+		return database.insert(User.TABLE_NAME, null, getUserContentValues(user));
 	}
 
+	public long updateUser(User user) {
+		return database.update(User.TABLE_NAME, getUserContentValues(user), null, null);
+	}
+	
 	public void deleteUser(int userId) {
 		database.delete(User.TABLE_NAME, User.COLUMN_ID + " = " + userId, null);
 	}
@@ -63,9 +58,24 @@ public class UserDataSource {
 		return users;
 	}
 
+	private ContentValues getUserContentValues(User user) {
+		ContentValues values = new ContentValues();
+		values.put(User.COLUMN_PHOTO_PATH, user.getPhotoPath());
+		values.put(User.COLUMN_USERNAME, user.getUsername());
+		values.put(User.COLUMN_GENDER, user.getGender());
+		values.put(User.COLUMN_HEIGHT, user.getHeight());
+		values.put(User.COLUMN_AGE_FROM, user.getAgeFrom());
+		values.put(User.COLUMN_AGE_TO, user.getAgeTo());
+		values.put(User.COLUMN_HAIR_COLOR, user.getHairColor());
+		values.put(User.COLUMN_COMMENT, user.getComment());
+		
+		return values;
+	}
+	
 	private User cursorToComment(Cursor cursor) {
 		User user = new User();
 		user.setId(cursor.getInt(cursor.getColumnIndex(User.COLUMN_ID)));
+		user.setPhotoPath(cursor.getString(cursor.getColumnIndex(User.COLUMN_PHOTO_PATH)));
 		user.setUsername(cursor.getString(cursor.getColumnIndex(User.COLUMN_USERNAME)));
 		user.setGender(cursor.getString(cursor.getColumnIndex(User.COLUMN_GENDER)));
 		user.setHeight(cursor.getInt(cursor.getColumnIndex(User.COLUMN_HEIGHT)));
