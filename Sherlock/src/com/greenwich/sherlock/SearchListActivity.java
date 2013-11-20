@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 	private SearchResultAdapter mAdapter;
 	private List<User> mUsers;
 	private UserDataSource mUserDataSource;
-	private User mUserDelete;
+	private User mUser;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +84,27 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View view, int position,
 			long id) {
-		mUserDelete = mUsers.get(position);
-		showDialogConfirmDelete();
+		mUser = mUsers.get(position);
+		
+		AlertDialog.Builder selectOption = new AlertDialog.Builder(SearchListActivity.this);
+        final CharSequence[] opsChars = {"Edit", "Delete"};
+        selectOption.setItems(opsChars, new android.content.DialogInterface.OnClickListener() {
+
+            @Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (which == 0) {
+					Intent intent = new Intent(SearchListActivity.this, UserFormActivity.class);
+					intent.putExtra(Config.USER_OBJECT, mUser);
+					intent.putExtra(Config.IS_NEW, false);
+					startActivity(intent);
+				} else if (which == 1) {
+					showDialogConfirmDelete();
+				}
+				dialog.dismiss();
+			}
+        });
+        
+        selectOption.show();
 		return false;
 	}
 	
@@ -95,21 +115,20 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 	DialogInterface.OnClickListener confirmDeleteListenner = new DialogInterface.OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
-			long result = mUserDataSource.deleteUser(mUserDelete.getId());
+			long result = mUserDataSource.deleteUser(mUser.getId());
 			if (result != -1) {
-				mUsers.remove(mUserDelete);
+				mUsers.remove(mUser);
 				mAdapter.setmUsers(mUsers);
 				Toast.makeText(SearchListActivity.this, "Delete complete!", Toast.LENGTH_SHORT).show();
-				
 			}
 		}
-
 	};
 	
 	@Override
 	public void onClick(View v) {
 		if (v == mBtNew) {
 			Intent intent = new Intent(SearchListActivity.this, UserFormActivity.class);
+			intent.putExtra(Config.IS_NEW, true);
 			startActivity(intent);
 		} else if (v == mBtSearch) {
 			String keySearch = mEtSearch.getText().toString().trim();
@@ -121,6 +140,12 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 			}
 			mAdapter.setmUsers(searchResults);
 		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mUserDataSource.close();
 	}
 
 }

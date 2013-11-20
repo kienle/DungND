@@ -70,7 +70,7 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		public void onClick(View v) {
 			
 			AlertDialog.Builder getImageFrom = new AlertDialog.Builder(ViewUserInfoActivity.this);
-            getImageFrom.setTitle("Select:");
+            getImageFrom.setTitle("Select");
             final CharSequence[] opsChars = {"From Camera", "From Gallery"};
             getImageFrom.setItems(opsChars, new android.content.DialogInterface.OnClickListener() {
 
@@ -246,6 +246,10 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		/* Associate the Bitmap to the ImageView */
 		mImageView.setImageBitmap(bitmap);
 		mImageView.setVisibility(View.VISIBLE);
+		
+		// save photo path to db
+		mUser.setPhotoPath(mCurrentPhotoPath);
+		mUserDataSource.updateUser(mUser);
 	}
 
 	private void galleryAddPic() {
@@ -282,7 +286,7 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		startActivityForResult(takePictureIntent, actionCode);
 	}
 
-	private void handleBigCameraPhoto() {
+	private void handleCameraPhoto() {
 
 		if (mCurrentPhotoPath != null) {
 			setPic();
@@ -296,17 +300,24 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		switch (requestCode) {
 		case ACTION_TAKE_PHOTO_B:
 			if (resultCode == RESULT_OK) {
-				handleBigCameraPhoto();
+				handleCameraPhoto();
+
+//				Cursor cursor = getContentResolver().query(
+//						Media.EXTERNAL_CONTENT_URI,
+//						new String[] { Media.DATA, Media.DATE_ADDED,
+//								MediaStore.Images.ImageColumns.ORIENTATION },
+//						Media.DATE_ADDED, null, "date_added ASC");
+//				if (cursor != null && cursor.moveToFirst()) {
+//					do {
+//						Uri uri = Uri.parse(cursor.getString(cursor
+//								.getColumnIndex(Media.DATA)));
+//						mCurrentPhotoPath = uri.toString();
+//					} while (cursor.moveToNext());
+//					cursor.close();
+//				}
 				
-				Cursor cursor = getContentResolver().query(Media.EXTERNAL_CONTENT_URI, new String[]{Media.DATA, Media.DATE_ADDED, MediaStore.Images.ImageColumns.ORIENTATION}, Media.DATE_ADDED, null, "date_added ASC");
-				if(cursor != null && cursor.moveToFirst())
-				{
-				    do {
-				        Uri uri = Uri.parse(cursor.getString(cursor.getColumnIndex(Media.DATA)));
-				        mCurrentPhotoPath = uri.toString();
-				    }while(cursor.moveToNext());
-				    cursor.close();
-				}
+//				Uri selectedImage = data.getData();
+//		        mCurrentPhotoPath = getPath(selectedImage);
 			}
 			break;
 			
@@ -315,13 +326,15 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		        Uri selectedImage = data.getData();
 		        mCurrentPhotoPath = getPath(selectedImage);
 		        mImageView.setImageURI(selectedImage);
+		        
+		        // save photo path to db
+		        mUser.setPhotoPath(mCurrentPhotoPath);
+				mUserDataSource.updateUser(mUser);
 		    }
 			break;
 		} // switch
 		
-		Log.d("KienLT", "Image path = " + mCurrentPhotoPath);
-		mUser.setPhotoPath(mCurrentPhotoPath);
-		mUserDataSource.updateUser(mUser);
+		
 	}
 
 	// Some lifecycle callbacks so that the image can survive orientation change
@@ -393,6 +406,12 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		}
 
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mUserDataSource.close();
 	}
 
 }

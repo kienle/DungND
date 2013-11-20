@@ -31,7 +31,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 	private EditText mEtComment;
 	
 	private User mUser;
-	private ImageView mImageView;
+	private boolean mIsAddNewUser;
 	private Button mBtSave;
 	private UserDataSource mUserDataSource;
 	private Toast mToast;
@@ -47,7 +47,6 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		mUserDataSource = new UserDataSource(this);
 		mUserDataSource.open();
 		
-		mImageView = (ImageView) findViewById(R.id.ivPhoto);
 		mEtName = (EditText) findViewById(R.id.etName);
 //		mEtGender = (EditText) findViewById(R.id.etGender);
 		mEtHeight = (EditText) findViewById(R.id.etHeight);
@@ -64,16 +63,16 @@ public class UserFormActivity extends Activity implements OnClickListener {
                 this, R.array.gender, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mPnGender.setAdapter(adapter);
-        mPnGender.setOnItemSelectedListener(
-                new OnItemSelectedListener() {
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                        showToast("Spinner1: position=" + position + " id=" + id);
-                    }
-
-                    public void onNothingSelected(AdapterView<?> parent) {
-//                        showToast("Spinner1: unselected");
-                    }
-                });
+//        mPnGender.setOnItemSelectedListener(
+//                new OnItemSelectedListener() {
+//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+////                        showToast("Spinner1: position=" + position + " id=" + id);
+//                    }
+//
+//                    public void onNothingSelected(AdapterView<?> parent) {
+////                        showToast("Spinner1: unselected");
+//                    }
+//                });
         
 		Intent intent = getIntent();
 		
@@ -81,6 +80,8 @@ public class UserFormActivity extends Activity implements OnClickListener {
 			return;
 		}
 		
+		mIsAddNewUser = intent.getBooleanExtra(Config.IS_NEW, true);
+
 		mUser = (User) intent.getSerializableExtra(Config.USER_OBJECT);
 		if (mUser != null) {
 			mEtName.setText(mUser.getUsername());
@@ -110,7 +111,20 @@ public class UserFormActivity extends Activity implements OnClickListener {
 				user.setHairColor(mEtHairColor.getText().toString().trim());
 				user.setComment(mEtComment.getText().toString().trim());
 				
-				long result = mUserDataSource.insertUser(user);
+				long result = -1;
+				if (mIsAddNewUser) {
+					result = mUserDataSource.insertUser(user);
+				} else {
+					mUser.setUsername(mEtName.getText().toString().trim());
+					mUser.setGender(mPnGender.getSelectedItem().toString());
+					mUser.setHeight(Integer.parseInt(mEtHeight.getText().toString().trim()));
+					mUser.setAgeFrom(Integer.parseInt(mEtAgeFrom.getText().toString().trim()));
+					mUser.setAgeTo(Integer.parseInt(mEtAgeTo.getText().toString().trim()));
+					mUser.setHairColor(mEtHairColor.getText().toString().trim());
+					mUser.setComment(mEtComment.getText().toString().trim());
+					result = mUserDataSource.updateUser(mUser);
+				}
+				
 				if (result != -1) {
 					Intent intent = new Intent(UserFormActivity.this, ViewUserInfoActivity.class);
 					intent.putExtra(Config.USER_OBJECT, user);
@@ -139,5 +153,11 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		}
 		
 		return true;
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mUserDataSource.close();
 	}
 }
