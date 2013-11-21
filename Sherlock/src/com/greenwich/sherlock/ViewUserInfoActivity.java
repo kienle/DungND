@@ -163,6 +163,8 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		if (v == mBtAddLocation) {
 			Intent intent = new Intent(ViewUserInfoActivity.this, AddLocationActivity.class);
+			intent.putExtra(Config.USER_ID, mUser.getId());
+			intent.putExtra(Config.IS_VIEW, false);
 			startActivity(intent);
 		}
 	}

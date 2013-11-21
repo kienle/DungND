@@ -14,8 +14,8 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,10 +27,10 @@ import com.greenwich.sherlock.util.DialogUtil;
 
 public class SearchListActivity extends Activity implements OnClickListener, OnItemClickListener, OnItemLongClickListener {
 	
-	private Button mBtNew;
+	private ImageButton mBtNew;
 	
 	private EditText mEtSearch;
-	private Button mBtSearch;
+	private ImageButton mBtSearch;
 	
 	private ListView mLvResult;
 	private SearchResultAdapter mAdapter;
@@ -48,11 +48,11 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 		mUserDataSource = new UserDataSource(this);
 		mUserDataSource.open();
 		
-		mBtNew = (Button) findViewById(R.id.btNew);
+		mBtNew = (ImageButton) findViewById(R.id.btNew);
 		mBtNew.setOnClickListener(this);
 		
 		mEtSearch = (EditText) findViewById(R.id.etSearch);
-		mBtSearch = (Button) findViewById(R.id.btSearch);
+		mBtSearch = (ImageButton) findViewById(R.id.btSearch);
 		mBtSearch.setOnClickListener(this);
 		
 		mLvResult = (ListView) findViewById(R.id.lvSearchResult);
@@ -138,6 +138,7 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 					searchResults.add(user);
 				}
 			}
+			mUsers = searchResults;
 			mAdapter.setmUsers(searchResults);
 		}
 	}

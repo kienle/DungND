@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.greenwich.sherlock.entity.User;
+import com.greenwich.sherlock.entity.UserLocation;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
@@ -24,6 +25,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 			+ User.COLUMN_HAIR_COLOR + " text not null, "
 			+ User.COLUMN_COMMENT + " int not null);";
 	
+	private static final String CREATE_USER_LOCATION = "create table " + UserLocation.TABLE_NAME
+			+ "(" + UserLocation.ID + " integer primary key autoincrement, "
+			+ UserLocation.USER_ID + " integer not null, "
+			+ UserLocation.TIME + " text not null, "
+			+ UserLocation.ADDRESS + " text not null, "
+			+ UserLocation.NOTE + " text not null);";
+	
 	public MySQLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -31,6 +39,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase database) {
 		database.execSQL(CREATE_ALBUM);
+		database.execSQL(CREATE_USER_LOCATION);
 	}
 
 	@Override
@@ -39,6 +48,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ", which will destroy all old data");
 		db.execSQL("DROP TABLE IF EXISTS " + User.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + UserLocation.TABLE_NAME);
 		onCreate(db);
 	}
 

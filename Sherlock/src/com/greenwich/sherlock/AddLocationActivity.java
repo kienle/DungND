@@ -2,6 +2,7 @@ package com.greenwich.sherlock;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -9,6 +10,7 @@ import java.util.Locale;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -21,11 +23,14 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.greenwich.sherlock.util.LocationUtil;
+import com.greenwich.sherlock.database.UserLocationDataSource;
+import com.greenwich.sherlock.entity.UserLocation;
+import com.greenwich.sherlock.util.Config;
 
 public class AddLocationActivity extends Activity implements OnClickListener,
 		LocationListener {
@@ -35,14 +40,17 @@ public class AddLocationActivity extends Activity implements OnClickListener,
 	private EditText mEtAddress;
 	private EditText mEtNote;
 
-	LocationManager Locationm;
-	public static Location lastbestlocation_trck = null;
-	public static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-	public static final long MIN_TIME_BW_UPDATES = 1000; // 1 minute
+	private Button mBtHistory;
+	private Button mBtSave;
+	
+	private int mUserId;
+	private UserLocation mUserLocation;
+	private boolean mIsView;
+	
+	private UserLocationDataSource mUserLocationDataSource;
 
-	private LocationUtil mLocationUtil;
-	private ProgressDialog dialog;
-
+	private ProgressDialog mProgressDialog;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -50,8 +58,12 @@ public class AddLocationActivity extends Activity implements OnClickListener,
 
 		setContentView(R.layout.activity_add_location);
 
-		mLocationUtil = new LocationUtil(this);
-
+		mProgressDialog = new ProgressDialog(AddLocationActivity.this);
+		mProgressDialog.setMessage("Loading...");
+		
+		mUserLocationDataSource = new UserLocationDataSource(this);
+		mUserLocationDataSource.open();
+		
 		mIbLocation = (ImageButton) findViewById(R.id.ibLocation);
 		mIbLocation.setOnClickListener(this);
 
@@ -59,57 +71,28 @@ public class AddLocationActivity extends Activity implements OnClickListener,
 		mEtAddress = (EditText) findViewById(R.id.etAddress);
 		mEtNote = (EditText) findViewById(R.id.etNote);
 
-		if (lastbestlocation_trck == null) {
-			Locationm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-			// ——–Gps provider—
-			Locationm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-					MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-
-			// ——–Network provider—
-			Locationm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-					MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+		mBtSave = (Button)findViewById(R.id.btSave);
+		mBtHistory = (Button) findViewById(R.id.btLocationHis);
+		mBtSave.setOnClickListener(this);
+		mBtHistory.setOnClickListener(this);
+		 
+		Intent intent = getIntent();
+		if (intent == null) {
+			return;
+		}
+		mIsView = intent.getBooleanExtra(Config.IS_VIEW, false);
+		mUserLocation = (UserLocation) intent.getSerializableExtra(Config.USER_LOCATION_OBJECT);
+		mUserId = intent.getIntExtra(Config.USER_ID, -1);
+		
+		if (mUserLocation != null) {
+			mEtTime.setText(mUserLocation.getTime());
+			mEtAddress.setText(mUserLocation.getAddress());
+			mEtNote.setText(mUserLocation.getNote());
 		}
 	}
 
 	@Override
 	public void onLocationChanged(Location location) {
-		Toast.makeText(getApplicationContext(), "gahdfkls", Toast.LENGTH_SHORT)
-				.show();
-		try {
-			double latitude = 0, longitude = 0;
-			if (isBetterLocation(location, lastbestlocation_trck)) {
-				lastbestlocation_trck = location;
-				latitude = location.getLatitude();
-				longitude = location.getLongitude();
-
-				Toast.makeText(getApplicationContext(), latitude + "",
-						Toast.LENGTH_SHORT).show();
-
-//				Geocoder geocoder;
-//				List<Address> addresses = new ArrayList<Address>();
-//				geocoder = new Geocoder(this, Locale.getDefault());
-//				try {
-//					addresses = geocoder
-//							.getFromLocation(latitude, longitude, 1);
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//
-//				String address = addresses.get(0).getAddressLine(0);
-//				String city = addresses.get(0).getAddressLine(1);
-//				String country = addresses.get(0).getAddressLine(2);
-//
-//				Time time = new Time();
-//				time.setToNow();
-//
-//				mEtAddress.setText(address + " : " + city + " : " + country);
-			}
-
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 	}
 
 	@Override
@@ -127,72 +110,55 @@ public class AddLocationActivity extends Activity implements OnClickListener,
 		// TODO Auto-generated method stub
 	}
 
-	protected boolean isBetterLocation(Location location,
-			Location currentBestLocation) {
-		if (currentBestLocation == null) {
-			// A new location is always better than no location
-			if (location.getProvider().contains("gps")) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		// Check whether the new location fix is newer or older
-		boolean isSignificantlyNewer = location.getTime() > currentBestLocation
-				.getTime();
-
-		// If it’s been more than two minutes since the current location, use
-		// the new location
-		// because the user has likely moved
-		if (!isSignificantlyNewer) {
-			return false;
-		}
-		// Check whether the new location fix is more or less accurate
-		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation
-				.getAccuracy());
-		boolean isLessAccurate = accuracyDelta > 0;
-		boolean isMoreAccurate = accuracyDelta < 0;
-		boolean isSignificantlyLessAccurate = accuracyDelta > 200;
-
-		// Check if the old and new location are from the same provider
-		boolean isFromSameProvider = isSameProvider(location.getProvider(),
-				currentBestLocation.getProvider());
-
-		// Determine location quality using a combination of timeliness and
-		// accuracy
-		if (isMoreAccurate) {
-			return true;
-		} else if (isSignificantlyNewer && !isLessAccurate) {
-			return true;
-		} else if (isSignificantlyNewer && !isSignificantlyLessAccurate
-				&& isFromSameProvider) {
-			return true;
-		}
-		return false;
-	}
-
-	/** Checks whether two providers are the same */
-	private boolean isSameProvider(String provider1, String provider2) {
-		if (provider1 == null) {
-			return provider2 == null;
-		}
-		return provider1.equals(provider2);
-	}
-
 	@Override
 	public void onClick(View v) {
 		if (v == mIbLocation) {
-			getLocation();
+			getAddress();
 			Calendar cal = Calendar.getInstance();
 			java.util.Date date = cal.getTime();
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String currentTime = df.format(date);
 			mEtTime.setText(currentTime);
-
-			dialog = ProgressDialog.show(AddLocationActivity.this, "", "Please wait..", true);
-			GetCurrentAddress currentadd = new GetCurrentAddress();
-			currentadd.execute();
+		} else if (v == mBtSave) {
+			if (mEtTime.getText().toString().trim().equals("") ||
+					mEtAddress.getText().toString().trim().equals("")) {
+				Toast.makeText(AddLocationActivity.this, "Please get location first!", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
+			if (mIsView) {
+				mUserLocation.setTime(mEtTime.getText().toString().trim());
+				mUserLocation.setAddress(mEtAddress.getText().toString().trim());
+				mUserLocation.setNote(mEtNote.getText().toString().trim());
+				
+				long result = mUserLocationDataSource.updateUserLocation(mUserLocation);
+				if (result != -1) {
+					Toast.makeText(AddLocationActivity.this, "Update location complete!", Toast.LENGTH_SHORT).show();
+					finish();
+				} else {
+					Toast.makeText(AddLocationActivity.this, "Update location fail!", Toast.LENGTH_SHORT).show();
+				}
+				
+			} else {
+				UserLocation location = new UserLocation();
+				location.setUserId(mUserId);
+				location.setTime(mEtTime.getText().toString().trim());
+				location.setAddress(mEtAddress.getText().toString().trim());
+				location.setNote(mEtNote.getText().toString().trim());
+				
+				long result = mUserLocationDataSource.insertUserLocation(location);
+				if (result != -1) {
+					Toast.makeText(AddLocationActivity.this, "Add location complete!", Toast.LENGTH_SHORT).show();
+					finish();
+				} else {
+					Toast.makeText(AddLocationActivity.this, "Add location fail!", Toast.LENGTH_SHORT).show();
+				}
+			}
+			
+		} else if (v == mBtHistory) {
+			Intent intent = new Intent(AddLocationActivity.this, LocationHistoryActivity.class);
+			intent.putExtra(Config.USER_ID, mUserId);
+			startActivity(intent);
 		}
 	}
 
@@ -209,8 +175,8 @@ public class AddLocationActivity extends Activity implements OnClickListener,
 				String city = address.getCountryName();
 				String region_code = address.getCountryCode();
 				String zipcode = address.getPostalCode();
-				double lat = address.getLatitude();
-				double lon = address.getLongitude();
+//				double lat = address.getLatitude();
+//				double lon = address.getLongitude();
 
 				result.append(locality + " ");
 				result.append(city + " " + region_code + " ");
@@ -224,46 +190,82 @@ public class AddLocationActivity extends Activity implements OnClickListener,
 		return result.toString();
 	}
 
-	private class GetCurrentAddress extends AsyncTask<String, Void, String> {
-
-		@Override
-		protected String doInBackground(String... urls) {
-			// this lat and log we can get from current location but here we
-			// given hard coded
-			double latitude = 12.916523125961666;
-			double longitude = 77.61959824603072;
-//			double latitude = lastbestlocation_trck.getLatitude();
-//			double longitude = lastbestlocation_trck.getLongitude();
-
-			String address = getAddress(AddLocationActivity.this, latitude,
-					longitude);
-			return address;
-		}
-
-		@Override
-		protected void onPostExecute(String resultString) {
-			dialog.dismiss();
-			mEtAddress.setText(resultString);
+	public void getAddress() {
+		// Get the location manager
+		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		Criteria criteria = new Criteria();
+		String bestProvider = locationManager.getBestProvider(criteria, false);
+		Location location = locationManager.getLastKnownLocation(bestProvider);
+		double lat, lon;
+		try {
+			lat = location.getLatitude();
+			lon = location.getLongitude();
+			
+			GetCurrentAddress task = new GetCurrentAddress(lat, lon);
+			task.execute();
+		} catch (NullPointerException e) {
+			Log.d("KienLT", "NullPointerException = " + e.getMessage());
 		}
 	}
 	
-	public double getLocation()
-    {
-     // Get the location manager
-     LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-     Criteria criteria = new Criteria();
-     String bestProvider = locationManager.getBestProvider(criteria, false);
-     Location location = locationManager.getLastKnownLocation(bestProvider);
-     double lat, lon;
-     try {
-       lat = location.getLatitude ();
-       lon = location.getLongitude ();
-       Log.d("KienLT", "test fasfdsa = " + lat);
-       return lat;
-     }
-     catch (NullPointerException e){
-         e.printStackTrace();
-       return 0;
-     }
-    }
+	private class GetCurrentAddress extends AsyncTask<Void, Void, String> {
+		private double mLat;
+		private double mLog;
+		
+		public GetCurrentAddress(double lat, double log) {
+			this.mLat = lat;
+			this.mLog = log;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			mProgressDialog.show();
+		}
+		
+		@Override
+		protected String doInBackground(Void... arg0) {
+			StringBuilder result = new StringBuilder();
+			Geocoder geocoder;
+			List<Address> addresses = new ArrayList<Address>();
+			geocoder = new Geocoder(AddLocationActivity.this, Locale.getDefault());
+			try {
+				addresses = geocoder.getFromLocation(mLat, mLog, 1);
+			} catch (IOException e) {
+				Log.d("KienLT", "IOException = " + e.getMessage());
+			}
+
+			if (addresses.size() > 0) {
+				String address = addresses.get(0).getAddressLine(0);
+				String city = addresses.get(0).getAddressLine(1);
+				String country = addresses.get(0).getAddressLine(2);
+	
+				result.append(address + ", ");
+				result.append(city + ", ");
+				result.append(country);
+				
+				return result.toString();
+//				mEtAddress.setText(address + ", " + city + ", " + country);
+			}
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			mProgressDialog.dismiss();
+			if (result != null) {
+				mEtAddress.setText(result);
+			}
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		mUserLocationDataSource.close();
+	}
+	
 }

@@ -112,8 +112,14 @@ public class UserFormActivity extends Activity implements OnClickListener {
 				user.setComment(mEtComment.getText().toString().trim());
 				
 				long result = -1;
+				Intent intent = new Intent(UserFormActivity.this, ViewUserInfoActivity.class);
 				if (mIsAddNewUser) {
 					result = mUserDataSource.insertUser(user);
+					
+					if (result != -1) {
+						intent.putExtra(Config.USER_OBJECT, user);
+					}
+					
 				} else {
 					mUser.setUsername(mEtName.getText().toString().trim());
 					mUser.setGender(mPnGender.getSelectedItem().toString());
@@ -123,20 +129,26 @@ public class UserFormActivity extends Activity implements OnClickListener {
 					mUser.setHairColor(mEtHairColor.getText().toString().trim());
 					mUser.setComment(mEtComment.getText().toString().trim());
 					result = mUserDataSource.updateUser(mUser);
+					if (result != -1) {
+						intent.putExtra(Config.USER_OBJECT, mUser);
+					}
 				}
+				startActivity(intent);
 				
-				if (result != -1) {
-					Intent intent = new Intent(UserFormActivity.this, ViewUserInfoActivity.class);
-					intent.putExtra(Config.USER_OBJECT, user);
-					startActivity(intent);
-				}
 			}
 		}
 	}
 	
 	private boolean checkRequireField() {
-		int ageFrom = Integer.parseInt(mEtAgeFrom.getText().toString().trim());
-		int ageTo = Integer.parseInt(mEtAgeTo.getText().toString().trim());
+		String ageFromTxt = mEtAgeFrom.getText().toString().trim();
+		String ageToTxt = mEtAgeTo.getText().toString().trim();
+		if (ageFromTxt.equals("") || ageToTxt.equals("")) {
+			mToast.setText("Required fields have to be filled");
+			mToast.show();
+			return false;
+		}
+		int ageFrom = Integer.parseInt(ageFromTxt);
+		int ageTo = Integer.parseInt(ageToTxt);
 		if (mEtName.getText().toString().trim().equals("")
 				|| mPnGender.getSelectedItem().toString().trim().equals("")
 				|| mEtHeight.getText().toString().trim().equals("")
