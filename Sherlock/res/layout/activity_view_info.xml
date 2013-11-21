@@ -183,14 +183,4 @@
         android:layout_gravity="right"
         />
     
-    <Button 
-        android:id="@+id/btPost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Post Server"
-        android:layout_gravity="right"
-        android:visibility="gone"
-        />
-
 </LinearLayout>

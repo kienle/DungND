@@ -3,29 +3,43 @@ package com.greenwich.sherlock;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.greenwich.sherlock.adapter.SearchResultAdapter;
 import com.greenwich.sherlock.database.UserDataSource;
 import com.greenwich.sherlock.entity.User;
 import com.greenwich.sherlock.util.Config;
+import com.greenwich.sherlock.util.ConnectivityHelper;
 import com.greenwich.sherlock.util.DialogUtil;
+import com.greenwich.sherlock.util.ResultRequest;
 
 public class SearchListActivity extends Activity implements OnClickListener, OnItemClickListener, OnItemLongClickListener {
+	
+	public static final String COMPLETE = "complete";
+	public static final String ERROR = "error";
 	
 	private ImageButton mBtNew;
 	
@@ -37,6 +51,8 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 	private List<User> mUsers;
 	private UserDataSource mUserDataSource;
 	private User mUser;
+
+	private ProgressDialog mProgressDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +61,28 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 		
 		setContentView(R.layout.activity_search_list);
 		
+		mProgressDialog = new ProgressDialog(SearchListActivity.this);
+		mProgressDialog.setMessage("Posting...");
+		
 		mUserDataSource = new UserDataSource(this);
 		mUserDataSource.open();
 		
 		mBtNew = (ImageButton) findViewById(R.id.btNew);
 		mBtNew.setOnClickListener(this);
+	
+		Button btPost = (Button) findViewById(R.id.btPost);
+		btPost.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (mUsers == null || mUsers.size() == 0) {
+					Toast.makeText(SearchListActivity.this, "No any user to post!", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				new PostTask().execute();
+			}
+		});
 		
 		mEtSearch = (EditText) findViewById(R.id.etSearch);
 		mBtSearch = (ImageButton) findViewById(R.id.btSearch);
@@ -147,6 +180,78 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 	protected void onDestroy() {
 		super.onDestroy();
 		mUserDataSource.close();
+	}
+	
+	private class PostTask extends AsyncTask<String, Void, String> {
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			mProgressDialog.show();
+		}
+		
+		@Override
+		protected String doInBackground(String... arg0) {
+			String url1 = "http://stark-journey-7979.herokuapp.com/api/users/auth_token";
+			String result = pushListUsers(SearchListActivity.this, url1, mUsers);
+			return result;
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			mProgressDialog.dismiss();
+			if (result.equals(COMPLETE)) {
+				new AlertDialog.Builder(SearchListActivity.this)
+						.setMessage("Post user json to server successful!")
+						.setPositiveButton("Yes",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+									}
+								}).show();
+			}
+		}
+	}
+	
+	private String pushListUsers(Context context, String url, List<User> users) {
+		ConnectivityHelper con = new ConnectivityHelper(context);
+		con.setParameters("param", getUserJsonFromObject(context, users));
+		ResultRequest result = null;
+		try {
+			result = con.doGet(url);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if (result == null) {
+			return ERROR;
+		}
+		
+		String jsonResult = result.getStringResult();
+		
+		try {
+			JSONObject jsonData = new JSONObject(jsonResult);
+			String code = jsonData.getString("code");
+
+			if (!code.equals("")) {
+				return COMPLETE;
+			} else {
+				return ERROR;
+			}
+
+		} catch (JSONException e) {
+			Log.d("KienLT", "[ConnectionUtil][pushListEvents] JSONException: " + e.toString());
+			return ERROR;
+		}
+	}
+	
+	private static String getUserJsonFromObject(Context context, List<User> events) {
+		Gson gson = new Gson();
+		String json = gson.toJson(events);
+		Log.d("KienLT", "getUserJsonFromObject = " + json);
+		return json;
 	}
 
 }

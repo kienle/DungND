@@ -112,7 +112,6 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 //			dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
 		}
 	};
-	private ProgressDialog mProgressDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +119,6 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_view_info);
-		
-		mProgressDialog = new ProgressDialog(ViewUserInfoActivity.this);
-		mProgressDialog.setMessage("Loading...");
 		
 		mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 		mUserDataSource = new UserDataSource(this);
@@ -140,17 +136,6 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		
 		mBtAddLocation = (Button) findViewById(R.id.btAddLocation);
 		mBtAddLocation.setOnClickListener(this);
-		
-		Button btPost = (Button) findViewById(R.id.btPost);
-		btPost.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-//				postData("");
-				new PostTask().execute();
-			}
-		});
 		
 		mImageBitmap = null;
 
@@ -450,60 +435,4 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		mUserDataSource.close();
 	}
 
-	private class PostTask extends AsyncTask<String, Void, Void> {
-		
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			mProgressDialog.show();
-		}
-		
-		@Override
-		protected Void doInBackground(String... arg0) {
-			postData();
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-			mProgressDialog.dismiss();
-			if (result != null) {
-
-			}
-		}
-	}
-	
-	public void postData() {
-	    // Create a new HttpClient and Post Header
-		String url1 = "http://ip.jsontest.com/";
-		
-	    HttpParams myParams = new BasicHttpParams();
-	    HttpConnectionParams.setConnectionTimeout(myParams, 10000);
-	    HttpConnectionParams.setSoTimeout(myParams, 10000);
-	    HttpClient httpclient = new DefaultHttpClient(myParams);
-	    String json= "{ 'user': [{'id':1,'name':'John' ,'gender': 'male','height': 100 ,'age_from': 10,'age_to': 20,'hair_color': 'black', 'comment' : 'abc' }, { " + 
-			"'id':2, 'name':'Peter' , 'gender': 'male', 'height': 100 , 'age_from': 10, 'age_to': 20, 'hair_color': 'black', 'comment' : 'abc'}]}";
-
-	    try {
-
-	        HttpPost httppost = new HttpPost(url1.toString());
-	        httppost.setHeader("Content-type", "application/json");
-
-	        StringEntity se = new StringEntity(json); 
-	        se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-	        httppost.setEntity(se); 
-
-	        HttpResponse response = httpclient.execute(httppost);
-	        String temp = EntityUtils.toString(response.getEntity());
-	        Log.d("KienLT", temp);
-
-
-	    } catch (ClientProtocolException e) {
-	    	Log.d("KienLT", "ClientProtocolException = " + e.getMessage());
-	    } catch (IOException e) {
-	    	Log.d("KienLT", "IOException = " + e.getMessage());
-	    }
-	}
-	
 }
