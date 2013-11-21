@@ -93,6 +93,11 @@ public class AddLocationActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onLocationChanged(Location location) {
+		longitude = location.getLongitude();
+		latitude = location.getLatitude();
+		
+		GetCurrentAddress task = new GetCurrentAddress(latitude, longitude);
+		task.execute();
 	}
 
 	@Override
@@ -113,7 +118,8 @@ public class AddLocationActivity extends Activity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		if (v == mIbLocation) {
-			getAddress();
+//			getAddress();
+			getLocation();
 			Calendar cal = Calendar.getInstance();
 			java.util.Date date = cal.getTime();
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -162,51 +168,51 @@ public class AddLocationActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	public String getAddress(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
+//	public String getAddress(Context ctx, double latitude, double longitude) {
+//		StringBuilder result = new StringBuilder();
+//		try {
+//			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
+//			List<Address> addresses = geocoder.getFromLocation(latitude,
+//					longitude, 1);
+//			if (addresses.size() > 0) {
+//				Address address = addresses.get(0);
+//
+//				String locality = address.getLocality();
+//				String city = address.getCountryName();
+//				String region_code = address.getCountryCode();
+//				String zipcode = address.getPostalCode();
+////				double lat = address.getLatitude();
+////				double lon = address.getLongitude();
+//
+//				result.append(locality + " ");
+//				result.append(city + " " + region_code + " ");
+//				result.append(zipcode);
+//
+//			}
+//		} catch (IOException e) {
+//			Log.e("tag", e.getMessage());
+//		}
+//
+//		return result.toString();
+//	}
 
-				String locality = address.getLocality();
-				String city = address.getCountryName();
-				String region_code = address.getCountryCode();
-				String zipcode = address.getPostalCode();
-//				double lat = address.getLatitude();
-//				double lon = address.getLongitude();
-
-				result.append(locality + " ");
-				result.append(city + " " + region_code + " ");
-				result.append(zipcode);
-
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString();
-	}
-
-	public void getAddress() {
-		// Get the location manager
-		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		Criteria criteria = new Criteria();
-		String bestProvider = locationManager.getBestProvider(criteria, false);
-		Location location = locationManager.getLastKnownLocation(bestProvider);
-		double lat, lon;
-		try {
-			lat = location.getLatitude();
-			lon = location.getLongitude();
-			
-			GetCurrentAddress task = new GetCurrentAddress(lat, lon);
-			task.execute();
-		} catch (NullPointerException e) {
-			Log.d("KienLT", "NullPointerException = " + e.getMessage());
-		}
-	}
+//	public void getAddress() {
+//		// Get the location manager
+//		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//		Criteria criteria = new Criteria();
+//		String bestProvider = locationManager.getBestProvider(criteria, false);
+//		Location location = locationManager.getLastKnownLocation(bestProvider);
+//		double lat, lon;
+//		try {
+//			lat = location.getLatitude();
+//			lon = location.getLongitude();
+//			
+//			GetCurrentAddress task = new GetCurrentAddress(lat, lon);
+//			task.execute();
+//		} catch (NullPointerException e) {
+//			Log.d("KienLT", "NullPointerException = " + e.getMessage());
+//		}
+//	}
 	
 	private class GetCurrentAddress extends AsyncTask<Void, Void, String> {
 		private double mLat;
@@ -268,4 +274,23 @@ public class AddLocationActivity extends Activity implements OnClickListener,
 		mUserLocationDataSource.close();
 	}
 	
+	double longitude = 0;
+	double latitude = 0;
+	
+	private void getLocation() {
+		LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE); 
+		Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		
+		if (location != null) {
+			longitude = location.getLongitude();
+			latitude = location.getLatitude();
+			
+			GetCurrentAddress task = new GetCurrentAddress(latitude, longitude);
+			task.execute();
+		} else {
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, this);
+		}
+		
+	}
+
 }

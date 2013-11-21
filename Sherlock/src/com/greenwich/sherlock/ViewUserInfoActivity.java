@@ -3,11 +3,28 @@ package com.greenwich.sherlock;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,12 +33,14 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -93,6 +112,7 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 //			dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
 		}
 	};
+	private ProgressDialog mProgressDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +120,9 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_view_info);
+		
+		mProgressDialog = new ProgressDialog(ViewUserInfoActivity.this);
+		mProgressDialog.setMessage("Loading...");
 		
 		mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 		mUserDataSource = new UserDataSource(this);
@@ -117,6 +140,17 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		
 		mBtAddLocation = (Button) findViewById(R.id.btAddLocation);
 		mBtAddLocation.setOnClickListener(this);
+		
+		Button btPost = (Button) findViewById(R.id.btPost);
+		btPost.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+//				postData("");
+				new PostTask().execute();
+			}
+		});
 		
 		mImageBitmap = null;
 
@@ -416,4 +450,60 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		mUserDataSource.close();
 	}
 
+	private class PostTask extends AsyncTask<String, Void, Void> {
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			mProgressDialog.show();
+		}
+		
+		@Override
+		protected Void doInBackground(String... arg0) {
+			postData();
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			mProgressDialog.dismiss();
+			if (result != null) {
+
+			}
+		}
+	}
+	
+	public void postData() {
+	    // Create a new HttpClient and Post Header
+		String url1 = "http://ip.jsontest.com/";
+		
+	    HttpParams myParams = new BasicHttpParams();
+	    HttpConnectionParams.setConnectionTimeout(myParams, 10000);
+	    HttpConnectionParams.setSoTimeout(myParams, 10000);
+	    HttpClient httpclient = new DefaultHttpClient(myParams);
+	    String json= "{ 'user': [{'id':1,'name':'John' ,'gender': 'male','height': 100 ,'age_from': 10,'age_to': 20,'hair_color': 'black', 'comment' : 'abc' }, { " + 
+			"'id':2, 'name':'Peter' , 'gender': 'male', 'height': 100 , 'age_from': 10, 'age_to': 20, 'hair_color': 'black', 'comment' : 'abc'}]}";
+
+	    try {
+
+	        HttpPost httppost = new HttpPost(url1.toString());
+	        httppost.setHeader("Content-type", "application/json");
+
+	        StringEntity se = new StringEntity(json); 
+	        se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+	        httppost.setEntity(se); 
+
+	        HttpResponse response = httpclient.execute(httppost);
+	        String temp = EntityUtils.toString(response.getEntity());
+	        Log.d("KienLT", temp);
+
+
+	    } catch (ClientProtocolException e) {
+	    	Log.d("KienLT", "ClientProtocolException = " + e.getMessage());
+	    } catch (IOException e) {
+	    	Log.d("KienLT", "IOException = " + e.getMessage());
+	    }
+	}
+	
 }
