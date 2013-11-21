@@ -36,8 +36,8 @@ public class UserLocationDataSource {
 		return database.update(UserLocation.TABLE_NAME, getUserLocationContentValues(userLocation), UserLocation.ID + "=" + userLocation.getId(), null);
 	}
 	
-	public long deleteUserLocation(int userLocationId) {
-		return database.delete(UserLocation.TABLE_NAME, UserLocation.ID + " = " + userLocationId, null);
+	public long deleteUserLocation(int userId) {
+		return database.delete(UserLocation.TABLE_NAME, UserLocation.USER_ID + " = " + userId, null);
 	}
 
 	public List<UserLocation> getAllLocationByUser(int userId) {

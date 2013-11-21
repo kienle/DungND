@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.greenwich.sherlock.adapter.SearchResultAdapter;
 import com.greenwich.sherlock.database.UserDataSource;
+import com.greenwich.sherlock.database.UserLocationDataSource;
 import com.greenwich.sherlock.entity.User;
 import com.greenwich.sherlock.util.Config;
 import com.greenwich.sherlock.util.ConnectivityHelper;
@@ -50,6 +51,7 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 	private SearchResultAdapter mAdapter;
 	private List<User> mUsers;
 	private UserDataSource mUserDataSource;
+	private UserLocationDataSource mUserLocationDataSource;
 	private User mUser;
 
 	private ProgressDialog mProgressDialog;
@@ -66,6 +68,9 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 		
 		mUserDataSource = new UserDataSource(this);
 		mUserDataSource.open();
+		
+		mUserLocationDataSource = new UserLocationDataSource(this);
+		mUserLocationDataSource.open();
 		
 		mBtNew = (ImageButton) findViewById(R.id.btNew);
 		mBtNew.setOnClickListener(this);
@@ -149,6 +154,8 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
 			long result = mUserDataSource.deleteUser(mUser.getId());
+			long deleteLocation = mUserLocationDataSource.deleteUserLocation(mUser.getId());
+			Log.d("KienLT", "deleteLocation = " + deleteLocation);
 			if (result != -1) {
 				mUsers.remove(mUser);
 				mAdapter.setmUsers(mUsers);
@@ -180,6 +187,7 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 	protected void onDestroy() {
 		super.onDestroy();
 		mUserDataSource.close();
+		mUserLocationDataSource.close();
 	}
 	
 	private class PostTask extends AsyncTask<String, Void, String> {
