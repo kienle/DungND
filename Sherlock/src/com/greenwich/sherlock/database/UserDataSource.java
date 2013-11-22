@@ -29,22 +29,25 @@ public class UserDataSource {
 	}
 
 	public long insertUser(User user) {
-		return database.insert(User.TABLE_NAME, null, getUserContentValues(user));
+		return database.insert(User.TABLE_NAME, null,
+				getUserContentValues(user));
 	}
 
 	public long updateUser(User user) {
-		return database.update(User.TABLE_NAME, getUserContentValues(user), User.COLUMN_ID + "=" + user.getId(), null);
+		return database.update(User.TABLE_NAME, getUserContentValues(user),
+				User.COLUMN_ID + "=" + user.getId(), null);
 	}
-	
+
 	public long deleteUser(int userId) {
-		return database.delete(User.TABLE_NAME, User.COLUMN_ID + " = " + userId, null);
+		return database.delete(User.TABLE_NAME,
+				User.COLUMN_ID + " = " + userId, null);
 	}
 
 	public List<User> getAllUser() {
 		List<User> users = new ArrayList<User>();
 
-		Cursor cursor = database.query(User.TABLE_NAME, null, null, null,
-				null, null, null);
+		Cursor cursor = database.query(User.TABLE_NAME, null, null, null, null,
+				null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -69,22 +72,29 @@ public class UserDataSource {
 		values.put(User.COLUMN_HAIR_COLOR, user.getHairColor());
 		values.put(User.COLUMN_BODY_TYPE, user.getBodyType());
 		values.put(User.COLUMN_COMMENT, user.getComment());
-		
+
 		return values;
 	}
-	
+
 	private User cursorToComment(Cursor cursor) {
 		User user = new User();
 		user.setId(cursor.getInt(cursor.getColumnIndex(User.COLUMN_ID)));
-		user.setPhotoPath(cursor.getString(cursor.getColumnIndex(User.COLUMN_PHOTO_PATH)));
-		user.setUsername(cursor.getString(cursor.getColumnIndex(User.COLUMN_USERNAME)));
-		user.setGender(cursor.getString(cursor.getColumnIndex(User.COLUMN_GENDER)));
+		user.setPhotoPath(cursor.getString(cursor
+				.getColumnIndex(User.COLUMN_PHOTO_PATH)));
+		user.setUsername(cursor.getString(cursor
+				.getColumnIndex(User.COLUMN_USERNAME)));
+		user.setGender(cursor.getString(cursor
+				.getColumnIndex(User.COLUMN_GENDER)));
 		user.setHeight(cursor.getInt(cursor.getColumnIndex(User.COLUMN_HEIGHT)));
-		user.setAgeFrom(cursor.getInt(cursor.getColumnIndex(User.COLUMN_AGE_FROM)));
+		user.setAgeFrom(cursor.getInt(cursor
+				.getColumnIndex(User.COLUMN_AGE_FROM)));
 		user.setAgeTo(cursor.getInt(cursor.getColumnIndex(User.COLUMN_AGE_TO)));
-		user.setHairColor(cursor.getString(cursor.getColumnIndex(User.COLUMN_HAIR_COLOR)));
-		user.setBodyType(cursor.getString(cursor.getColumnIndex(User.COLUMN_BODY_TYPE)));
-		user.setComment(cursor.getString(cursor.getColumnIndex(User.COLUMN_COMMENT)));
+		user.setHairColor(cursor.getString(cursor
+				.getColumnIndex(User.COLUMN_HAIR_COLOR)));
+		user.setBodyType(cursor.getString(cursor
+				.getColumnIndex(User.COLUMN_BODY_TYPE)));
+		user.setComment(cursor.getString(cursor
+				.getColumnIndex(User.COLUMN_COMMENT)));
 		return user;
 	}
 }

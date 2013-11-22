@@ -28,22 +28,26 @@ public class UserLocationDataSource {
 	}
 
 	public long insertUserLocation(UserLocation userLocation) {
-		return database.insert(UserLocation.TABLE_NAME, null, getUserLocationContentValues(userLocation));
+		return database.insert(UserLocation.TABLE_NAME, null,
+				getUserLocationContentValues(userLocation));
 	}
 
 	public long updateUserLocation(UserLocation userLocation) {
-		return database.update(UserLocation.TABLE_NAME, getUserLocationContentValues(userLocation), UserLocation.ID + "=" + userLocation.getId(), null);
+		return database.update(UserLocation.TABLE_NAME,
+				getUserLocationContentValues(userLocation), UserLocation.ID
+						+ "=" + userLocation.getId(), null);
 	}
-	
+
 	public long deleteUserLocation(int userId) {
-		return database.delete(UserLocation.TABLE_NAME, UserLocation.USER_ID + " = " + userId, null);
+		return database.delete(UserLocation.TABLE_NAME, UserLocation.USER_ID
+				+ " = " + userId, null);
 	}
 
 	public List<UserLocation> getAllLocationByUser(int userId) {
 		List<UserLocation> userLocations = new ArrayList<UserLocation>();
 
-		Cursor cursor = database.query(UserLocation.TABLE_NAME, null, UserLocation.USER_ID + "=" + userId, null,
-				null, null, null);
+		Cursor cursor = database.query(UserLocation.TABLE_NAME, null,
+				UserLocation.USER_ID + "=" + userId, null, null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -63,17 +67,22 @@ public class UserLocationDataSource {
 		values.put(UserLocation.TIME, userLocation.getTime());
 		values.put(UserLocation.ADDRESS, userLocation.getAddress());
 		values.put(UserLocation.NOTE, userLocation.getNote());
-		
+
 		return values;
 	}
-	
+
 	private UserLocation cursorToComment(Cursor cursor) {
 		UserLocation userLocation = new UserLocation();
-		userLocation.setId(cursor.getInt(cursor.getColumnIndex(UserLocation.ID)));
-		userLocation.setUserId(cursor.getInt(cursor.getColumnIndex(UserLocation.USER_ID)));
-		userLocation.setTime(cursor.getString(cursor.getColumnIndex(UserLocation.TIME)));
-		userLocation.setAddress(cursor.getString(cursor.getColumnIndex(UserLocation.ADDRESS)));
-		userLocation.setNote(cursor.getString(cursor.getColumnIndex(UserLocation.NOTE)));
+		userLocation
+				.setId(cursor.getInt(cursor.getColumnIndex(UserLocation.ID)));
+		userLocation.setUserId(cursor.getInt(cursor
+				.getColumnIndex(UserLocation.USER_ID)));
+		userLocation.setTime(cursor.getString(cursor
+				.getColumnIndex(UserLocation.TIME)));
+		userLocation.setAddress(cursor.getString(cursor
+				.getColumnIndex(UserLocation.ADDRESS)));
+		userLocation.setNote(cursor.getString(cursor
+				.getColumnIndex(UserLocation.NOTE)));
 		return userLocation;
 	}
 }

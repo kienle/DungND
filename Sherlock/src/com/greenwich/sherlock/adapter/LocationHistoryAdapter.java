@@ -16,7 +16,7 @@ public class LocationHistoryAdapter extends BaseAdapter {
 
 	private List<UserLocation> mUserLocations;
 	private LayoutInflater mInflater;
-	
+
 	public LocationHistoryAdapter(Context context, List<UserLocation> locations) {
 		this.mUserLocations = locations;
 		this.mInflater = LayoutInflater.from(context);
@@ -40,27 +40,29 @@ public class LocationHistoryAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final ViewHolder holder;
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.location_history_item, null);
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.location_history_item,
+					null);
 
-            holder = new ViewHolder();
-            holder.time = (TextView) convertView.findViewById(R.id.tvTime);
-            holder.address = (TextView) convertView.findViewById(R.id.tvAddress);
+			holder = new ViewHolder();
+			holder.time = (TextView) convertView.findViewById(R.id.tvTime);
+			holder.address = (TextView) convertView
+					.findViewById(R.id.tvAddress);
 
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
 
-        holder.time.setText(mUserLocations.get(position).getTime());
-        holder.address.setText(mUserLocations.get(position).getAddress());
-        
-        return convertView;
+		holder.time.setText(mUserLocations.get(position).getTime());
+		holder.address.setText(mUserLocations.get(position).getAddress());
+
+		return convertView;
 	}
-	
+
 	static class ViewHolder {
-        TextView time;
-        TextView address;
-    }
+		TextView time;
+		TextView address;
+	}
 
 }

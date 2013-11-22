@@ -15,7 +15,7 @@ import com.greenwich.sherlock.entity.User;
 public class SearchResultAdapter extends BaseAdapter {
 	private List<User> mUsers;
 	private LayoutInflater mInflater;
-	
+
 	public SearchResultAdapter(Context context, List<User> users) {
 		this.mUsers = users;
 		this.mInflater = LayoutInflater.from(context);
@@ -44,24 +44,24 @@ public class SearchResultAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final ViewHolder holder;
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.search_result_item, null);
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.search_result_item, null);
 
-            holder = new ViewHolder();
-            holder.name = (TextView) convertView.findViewById(R.id.name);
+			holder = new ViewHolder();
+			holder.name = (TextView) convertView.findViewById(R.id.name);
 
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
 
-        holder.name.setText(mUsers.get(position).getUsername());
-        
-        return convertView;
+		holder.name.setText(mUsers.get(position).getUsername());
+
+		return convertView;
 	}
-	
+
 	static class ViewHolder {
-        TextView name;
-    }
+		TextView name;
+	}
 
 }

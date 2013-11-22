@@ -7,9 +7,9 @@ public class User implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final String TABLE_NAME = "user";
-	
+
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_PHOTO_PATH = "photo";
 	public static final String COLUMN_USERNAME = "username";
@@ -20,7 +20,7 @@ public class User implements Serializable {
 	public static final String COLUMN_HAIR_COLOR = "hair_color";
 	public static final String COLUMN_BODY_TYPE = "body_type";
 	public static final String COLUMN_COMMENT = "comment";
-	
+
 	private int id;
 	private String photoPath;
 	private String username;

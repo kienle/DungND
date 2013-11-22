@@ -19,36 +19,36 @@ import com.greenwich.sherlock.entity.User;
 import com.greenwich.sherlock.util.Config;
 
 public class UserFormActivity extends Activity implements OnClickListener {
-	
+
 	private EditText mEtName;
-//	private EditText mEtGender;
+	// private EditText mEtGender;
 	private Spinner mPnGender;
 	private EditText mEtHeight;
-	private EditText mEtAgeFrom	;
+	private EditText mEtAgeFrom;
 	private EditText mEtAgeTo;
 	private EditText mEtHairColor;
 	private Spinner mPnBodyType;
 	private EditText mEtComment;
-	
+
 	private User mUser;
 	private boolean mIsAddNewUser;
 	private Button mBtSave;
 	private UserDataSource mUserDataSource;
 	private Toast mToast;
 	private String[] mBodyTypes;
-	
+
 	@SuppressLint("ShowToast")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_user_form);
-		
+
 		mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 		mUserDataSource = new UserDataSource(this);
 		mUserDataSource.open();
-		
+
 		mEtName = (EditText) findViewById(R.id.etName);
 		mEtHeight = (EditText) findViewById(R.id.etHeight);
 		mEtAgeFrom = (EditText) findViewById(R.id.etAgeFrom);
@@ -57,27 +57,28 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		mEtComment = (EditText) findViewById(R.id.etComment);
 		mBtSave = (Button) findViewById(R.id.btSave);
 		mBtSave.setOnClickListener(this);
-		
+
 		mBodyTypes = getResources().getStringArray(R.array.bodyType);
-		
+
 		mPnGender = (Spinner) findViewById(R.id.spinner1);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.gender, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mPnGender.setAdapter(adapter);
-        
-        mPnBodyType = (Spinner) findViewById(R.id.bodyTypes);
-        ArrayAdapter<CharSequence> adpBodyTypes = ArrayAdapter.createFromResource(
-                this, R.array.bodyType, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mPnBodyType.setAdapter(adpBodyTypes);
-        
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+				this, R.array.gender, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mPnGender.setAdapter(adapter);
+
+		mPnBodyType = (Spinner) findViewById(R.id.bodyTypes);
+		ArrayAdapter<CharSequence> adpBodyTypes = ArrayAdapter
+				.createFromResource(this, R.array.bodyType,
+						android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mPnBodyType.setAdapter(adpBodyTypes);
+
 		Intent intent = getIntent();
-		
+
 		if (intent == null) {
 			return;
 		}
-		
+
 		mIsAddNewUser = intent.getBooleanExtra(Config.IS_NEW, true);
 
 		mUser = (User) intent.getSerializableExtra(Config.USER_OBJECT);
@@ -89,7 +90,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 			mEtAgeFrom.setText(String.valueOf(mUser.getAgeFrom()));
 			mEtAgeTo.setText(String.valueOf(mUser.getAgeTo()));
 			mEtHairColor.setText(mUser.getHairColor());
-			
+
 			int index = 0;
 			for (String bodyType : mBodyTypes) {
 				if (bodyType.equals(mUser.getBodyType())) {
@@ -97,10 +98,10 @@ public class UserFormActivity extends Activity implements OnClickListener {
 				}
 				index += 1;
 			}
-			
+
 			mEtComment.setText(mUser.getComment());
 		}
-		
+
 	}
 
 	@Override
@@ -111,30 +112,37 @@ public class UserFormActivity extends Activity implements OnClickListener {
 				user.setPhotoPath("");
 				user.setUsername(mEtName.getText().toString().trim());
 				user.setGender(mPnGender.getSelectedItem().toString());
-				user.setHeight(Integer.parseInt(mEtHeight.getText().toString().trim()));
-				user.setAgeFrom(Integer.parseInt(mEtAgeFrom.getText().toString().trim()));
-				user.setAgeTo(Integer.parseInt(mEtAgeTo.getText().toString().trim()));
+				user.setHeight(Integer.parseInt(mEtHeight.getText().toString()
+						.trim()));
+				user.setAgeFrom(Integer.parseInt(mEtAgeFrom.getText()
+						.toString().trim()));
+				user.setAgeTo(Integer.parseInt(mEtAgeTo.getText().toString()
+						.trim()));
 				user.setHairColor(mEtHairColor.getText().toString().trim());
 				user.setBodyType(mPnBodyType.getSelectedItem().toString());
 				user.setComment(mEtComment.getText().toString().trim());
-				
+
 				long result = -1;
-				Intent intent = new Intent(UserFormActivity.this, ViewUserInfoActivity.class);
+				Intent intent = new Intent(UserFormActivity.this,
+						ViewUserInfoActivity.class);
 				if (mIsAddNewUser) {
 					result = mUserDataSource.insertUser(user);
-					
+
 					if (result != -1) {
 						Log.d("Logs", "insert result = " + result);
 						user.setId((int) result);
 						intent.putExtra(Config.USER_OBJECT, user);
 					}
-					
+
 				} else {
 					mUser.setUsername(mEtName.getText().toString().trim());
 					mUser.setGender(mPnGender.getSelectedItem().toString());
-					mUser.setHeight(Integer.parseInt(mEtHeight.getText().toString().trim()));
-					mUser.setAgeFrom(Integer.parseInt(mEtAgeFrom.getText().toString().trim()));
-					mUser.setAgeTo(Integer.parseInt(mEtAgeTo.getText().toString().trim()));
+					mUser.setHeight(Integer.parseInt(mEtHeight.getText()
+							.toString().trim()));
+					mUser.setAgeFrom(Integer.parseInt(mEtAgeFrom.getText()
+							.toString().trim()));
+					mUser.setAgeTo(Integer.parseInt(mEtAgeTo.getText()
+							.toString().trim()));
 					mUser.setHairColor(mEtHairColor.getText().toString().trim());
 					mUser.setBodyType(mPnBodyType.getSelectedItem().toString());
 					mUser.setComment(mEtComment.getText().toString().trim());
@@ -144,11 +152,11 @@ public class UserFormActivity extends Activity implements OnClickListener {
 					}
 				}
 				startActivity(intent);
-				
+
 			}
 		}
 	}
-	
+
 	private boolean checkRequireField() {
 		String ageFromTxt = mEtAgeFrom.getText().toString().trim();
 		String ageToTxt = mEtAgeTo.getText().toString().trim();
@@ -166,17 +174,17 @@ public class UserFormActivity extends Activity implements OnClickListener {
 				|| mEtAgeTo.getText().toString().trim().equals("")) {
 			mToast.setText("Required fields have to be filled");
 			mToast.show();
-			
+
 			return false;
 		} else if (ageTo <= ageFrom) {
 			mToast.setText("Age to must be greater than age from");
 			mToast.show();
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
