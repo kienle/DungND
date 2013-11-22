@@ -147,7 +147,7 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 				Bitmap bmp = BitmapFactory.decodeFile(photoPath);
 				mImageView.setImageBitmap(bmp);
 			} else {
-				mImageView.setImageResource(R.drawable.ic_launcher);
+				mImageView.setImageResource(R.drawable.unavailable2);
 			}
 			
 			mTvName.setText(mUser.getUsername());
