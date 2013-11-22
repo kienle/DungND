@@ -2,207 +2,196 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@drawable/background1">
-    
-    <ImageView 
+    android:background="@drawable/background1"
+    android:orientation="vertical" >
+
+    <ImageView
         android:id="@+id/ivPhoto"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_margin="10dp"
         android:layout_gravity="center_horizontal"
-        />
-    
+        android:layout_margin="10dp"
+        android:background="@drawable/unavailable2" />
+
     <TableLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        >
+        android:layout_height="wrap_content" >
+
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/name"
-	            android:textStyle="bold"
-	            />
-	        
-	        <TextView 
-	            android:id="@+id/tvName"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            />        
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1" />
         </TableRow>
-        
+
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/gender"
-	            android:textStyle="bold"
-	            />
-	        
-	        <TextView 
-	            android:id="@+id/tvGender"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            />        
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvGender"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1" />
         </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/heigh"
-	            android:textStyle="bold"
-	            />
-	        
-	        <TextView 
-	            android:id="@+id/tvHeight"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            />        
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/heigh"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvHeight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1" />
         </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/age_from"
-	            android:textStyle="bold"
-	            />
-	        
-	        <TextView 
-	            android:id="@+id/tvAgeFrom"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            />        
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/age_from"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAgeFrom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1" />
         </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/age_to"
-	            android:textStyle="bold"
-	            />
-	        
-	        <TextView 
-	            android:id="@+id/tvAgeTo"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            />        
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/age_to"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAgeTo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1" />
         </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/hair_color"
-	            android:textStyle="bold"
-	            />
-	        
-	        <TextView 
-	            android:id="@+id/tvHairColor"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            />        
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hair_color"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvHairColor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1" />
         </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/body_type"
-	            android:textStyle="bold"
-	            />
-	        
-	        <TextView 
-	            android:id="@+id/tvBodyType"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            />        
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/body_type"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvBodyType"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1" />
         </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/additional_comment"
-	            android:textStyle="bold"
-	            />
-	        
-	        <TextView 
-	            android:id="@+id/tvComment"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            />        
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/additional_comment"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvComment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1" />
         </TableRow>
     </TableLayout>
-    
-    <Button 
+
+    <Button
         android:id="@+id/btAddLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/add_location"
         android:layout_gravity="right"
-        />
-    
+        android:layout_marginTop="10dp"
+        android:text="@string/add_location" />
+
 </LinearLayout>
