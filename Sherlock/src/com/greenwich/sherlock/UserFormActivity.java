@@ -27,6 +27,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 	private EditText mEtAgeFrom	;
 	private EditText mEtAgeTo;
 	private EditText mEtHairColor;
+	private Spinner mPnBodyType;
 	private EditText mEtComment;
 	
 	private User mUser;
@@ -62,6 +63,12 @@ public class UserFormActivity extends Activity implements OnClickListener {
                 this, R.array.gender, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mPnGender.setAdapter(adapter);
+        
+        mPnBodyType = (Spinner) findViewById(R.id.bodyTypes);
+        ArrayAdapter<CharSequence> adpBodyTypes = ArrayAdapter.createFromResource(
+                this, R.array.bodyType, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mPnBodyType.setAdapter(adpBodyTypes);
         
 		Intent intent = getIntent();
 		
@@ -105,7 +112,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 					result = mUserDataSource.insertUser(user);
 					
 					if (result != -1) {
-						Log.d("KienLT", "insert result = " + result);
+						Log.d("Logs", "insert result = " + result);
 						user.setId((int) result);
 						intent.putExtra(Config.USER_OBJECT, user);
 					}

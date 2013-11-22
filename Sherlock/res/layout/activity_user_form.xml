@@ -2,177 +2,185 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@drawable/background1">
-    
+    android:background="@drawable/background1"
+    android:orientation="vertical" >
+
     <TableLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        android:layout_margin="5dp"
-        >
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Name (*)"
-	            />
-	        
-	        <EditText 
-	            android:id="@+id/etName"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            android:hint="Name of Person"
-	            />        
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name (*)" />
+
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="Name of Person" />
         </TableRow>
-        
+
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Gender (*)"
-	            />
-	        
-	        <Spinner
-	            android:id="@+id/spinner1"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender (*)" />
+
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Heigh (*)" />
+
+            <EditText
+                android:id="@+id/etHeight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="Height in cm"
+                android:inputType="number" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Age From (*)" />
+
+            <EditText
+                android:id="@+id/etAgeFrom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="Age From"
+                android:inputType="number" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Age To (*)" />
+
+            <EditText
+                android:id="@+id/etAgeTo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="Age To"
+                android:inputType="number" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hair color" />
+
+            <EditText
+                android:id="@+id/etHairColor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="Hair color" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Body Type" />
+
+            <Spinner
+                android:id="@+id/bodyTypes"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
         </TableRow>
         <TableRow
             android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Heigh (*)"
-	            />
-	        
-	        <EditText 
-	            android:id="@+id/etHeight"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            android:hint="Height in cm"
-	            android:inputType="number"
-	            />        
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Age From (*)"
-	            />
-	        
-	        <EditText 
-	            android:id="@+id/etAgeFrom"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            android:hint="Age From"
-	            android:inputType="number"
-	            />        
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Age To (*)"
-	            />
-	        
-	        <EditText 
-	            android:id="@+id/etAgeTo"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            android:hint="Age To"
-	            android:inputType="number"
-	            />        
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Hair color"
-	            />
-	        
-	        <EditText 
-	            android:id="@+id/etHairColor"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            android:hint="Hair color"
-	            />        
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginLeft="5dp"
-	        android:layout_marginRight="5dp"
-            >
-    		<TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Additional Comment"
-	            />
-	        
-	        <EditText 
-	            android:id="@+id/etComment"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_weight="1"
-	            android:lines="4"
-	            />        
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Additional Comment" />
+
+            <EditText
+                android:id="@+id/etComment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:lines="4" />
         </TableRow>
     </TableLayout>
-    
-    <Button 
+
+    <Button
         android:id="@+id/btSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/save"
         android:layout_gravity="right"
-        />
+        android:layout_marginTop="10dp"
+        android:text="@string/save" />
+
 </LinearLayout>

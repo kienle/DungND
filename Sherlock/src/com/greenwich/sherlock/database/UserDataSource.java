@@ -67,6 +67,7 @@ public class UserDataSource {
 		values.put(User.COLUMN_AGE_FROM, user.getAgeFrom());
 		values.put(User.COLUMN_AGE_TO, user.getAgeTo());
 		values.put(User.COLUMN_HAIR_COLOR, user.getHairColor());
+		values.put(User.COLUMN_BODY_TYPE, user.getBodyType());
 		values.put(User.COLUMN_COMMENT, user.getComment());
 		
 		return values;
