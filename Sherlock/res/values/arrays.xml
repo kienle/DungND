@@ -20,4 +20,10 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+    
+    <string-array name="bodyType">
+        <item>Thin</item>
+        <item>Normal</item>
+        <item>Fat</item>
+    </string-array>
 </resources>

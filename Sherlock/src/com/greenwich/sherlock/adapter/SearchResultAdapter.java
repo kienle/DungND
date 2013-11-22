@@ -13,12 +13,10 @@ import com.greenwich.sherlock.R;
 import com.greenwich.sherlock.entity.User;
 
 public class SearchResultAdapter extends BaseAdapter {
-	private Context mContext;
 	private List<User> mUsers;
 	private LayoutInflater mInflater;
 	
 	public SearchResultAdapter(Context context, List<User> users) {
-		this.mContext = context;
 		this.mUsers = users;
 		this.mInflater = LayoutInflater.from(context);
 	}

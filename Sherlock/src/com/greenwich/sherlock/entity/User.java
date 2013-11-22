@@ -18,6 +18,7 @@ public class User implements Serializable {
 	public static final String COLUMN_AGE_FROM = "age_from";
 	public static final String COLUMN_AGE_TO = "age_to";
 	public static final String COLUMN_HAIR_COLOR = "hair_color";
+	public static final String COLUMN_BODY_TYPE = "body_type";
 	public static final String COLUMN_COMMENT = "comment";
 	
 	private int id;
@@ -28,6 +29,7 @@ public class User implements Serializable {
 	private int ageFrom;
 	private int ageTo;
 	private String hairColor;
+	private String bodyType;
 	private String comment;
 
 	public int getId() {
@@ -100,6 +102,14 @@ public class User implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getBodyType() {
+		return bodyType;
+	}
+
+	public void setBodyType(String bodyType) {
+		this.bodyType = bodyType;
 	}
 
 }

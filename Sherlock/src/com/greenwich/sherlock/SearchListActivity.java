@@ -21,7 +21,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -75,7 +74,7 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 		mBtNew = (ImageButton) findViewById(R.id.btNew);
 		mBtNew.setOnClickListener(this);
 	
-		Button btPost = (Button) findViewById(R.id.btPost);
+		ImageButton btPost = (ImageButton) findViewById(R.id.btPost);
 		btPost.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -155,7 +154,7 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 		public void onClick(DialogInterface dialog, int which) {
 			long result = mUserDataSource.deleteUser(mUser.getId());
 			long deleteLocation = mUserLocationDataSource.deleteUserLocation(mUser.getId());
-			Log.d("KienLT", "deleteLocation = " + deleteLocation);
+			Log.d("Issues", "deleteLocation = " + deleteLocation);
 			if (result != -1) {
 				mUsers.remove(mUser);
 				mAdapter.setmUsers(mUsers);
@@ -250,7 +249,7 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 			}
 
 		} catch (JSONException e) {
-			Log.d("KienLT", "[ConnectionUtil][pushListEvents] JSONException: " + e.toString());
+			Log.d("Issues", "[ConnectionUtil][pushListEvents] JSONException: " + e.toString());
 			return ERROR;
 		}
 	}
@@ -258,7 +257,7 @@ public class SearchListActivity extends Activity implements OnClickListener, OnI
 	private static String getUserJsonFromObject(Context context, List<User> events) {
 		Gson gson = new Gson();
 		String json = gson.toJson(events);
-		Log.d("KienLT", "getUserJsonFromObject = " + json);
+		Log.d("Issues", "getUserJsonFromObject = " + json);
 		return json;
 	}
 

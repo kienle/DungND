@@ -14,12 +14,10 @@ import com.greenwich.sherlock.entity.UserLocation;
 
 public class LocationHistoryAdapter extends BaseAdapter {
 
-	private Context mContext;
 	private List<UserLocation> mUserLocations;
 	private LayoutInflater mInflater;
 	
 	public LocationHistoryAdapter(Context context, List<UserLocation> locations) {
-		this.mContext = context;
 		this.mUserLocations = locations;
 		this.mInflater = LayoutInflater.from(context);
 	}

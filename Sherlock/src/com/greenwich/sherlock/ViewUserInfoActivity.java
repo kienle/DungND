@@ -3,28 +3,11 @@ package com.greenwich.sherlock;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,10 +16,7 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -81,7 +61,6 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 	private Button mBtAddLocation;
 	private User mUser;
 	
-	private Toast mToast;
 	private UserDataSource mUserDataSource;
 	
 	Button.OnClickListener mTakePicOnClickListener = new Button.OnClickListener() {
@@ -113,6 +92,7 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		}
 	};
 	
+	@SuppressLint("ShowToast")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -120,7 +100,7 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		
 		setContentView(R.layout.activity_view_info);
 		
-		mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+		Toast.makeText(this, "", Toast.LENGTH_SHORT);
 		mUserDataSource = new UserDataSource(this);
 		mUserDataSource.open();
 		
@@ -217,6 +197,7 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		return storageDir;
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	private File createImageFile() throws IOException {
 		// Create an image file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

@@ -15,13 +15,13 @@
         android:gravity="right"
         >
         
-        <Button 
+        <ImageButton 
 	        android:id="@+id/btPost"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="10dp"
-	        android:text="Post Server"
+	        android:layout_width="50dp"
+            android:layout_height="50dp"
 	        android:layout_gravity="right"
+	        android:background="@drawable/upload"
+	        android:contentDescription="@string/upload"
 	        />
 
         <ImageButton
@@ -29,6 +29,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/add"
+            android:contentDescription="@string/add"
             />
     </LinearLayout>
 	<LinearLayout
@@ -51,6 +52,7 @@
 	        android:layout_margin="5dp"
 	        android:text="@string/search"
 	        android:background="@drawable/search"
+	        android:contentDescription="@string/search"
 	        />
 	</LinearLayout>
     <ListView
