@@ -26,4 +26,5 @@
     <string name="no">No</string>
     <string name="upload">Upload</string>
 	<string name="add">Add</string>
+	<string name="body_type">Body Type</string>
 </resources>

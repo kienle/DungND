@@ -57,6 +57,7 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 	private TextView mTvAgeFrom;
 	private TextView mTvAgeTo;
 	private TextView mTvHairColor;
+	private TextView mTvBodyType;
 	private TextView mTvComment;
 	private Button mBtAddLocation;
 	private User mUser;
@@ -112,6 +113,7 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 		mTvAgeFrom = (TextView) findViewById(R.id.tvAgeFrom);
 		mTvAgeTo = (TextView) findViewById(R.id.tvAgeTo);
 		mTvHairColor = (TextView) findViewById(R.id.tvHairColor);
+		mTvBodyType = (TextView) findViewById(R.id.tvBodyType);
 		mTvComment = (TextView) findViewById(R.id.tvComment);
 		
 		mBtAddLocation = (Button) findViewById(R.id.btAddLocation);
@@ -154,6 +156,7 @@ public class ViewUserInfoActivity extends Activity implements OnClickListener {
 			mTvAgeFrom.setText(String.valueOf(mUser.getAgeFrom()));
 			mTvAgeTo.setText(String.valueOf(mUser.getAgeTo()));
 			mTvHairColor.setText(mUser.getHairColor());
+			mTvBodyType.setText(mUser.getBodyType());
 			mTvComment.setText(mUser.getComment());
 		}
 	}

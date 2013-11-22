@@ -35,6 +35,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 	private Button mBtSave;
 	private UserDataSource mUserDataSource;
 	private Toast mToast;
+	private String[] mBodyTypes;
 	
 	@SuppressLint("ShowToast")
 	@Override
@@ -57,6 +58,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		mBtSave = (Button) findViewById(R.id.btSave);
 		mBtSave.setOnClickListener(this);
 		
+		mBodyTypes = getResources().getStringArray(R.array.bodyType);
 		
 		mPnGender = (Spinner) findViewById(R.id.spinner1);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -81,12 +83,21 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		mUser = (User) intent.getSerializableExtra(Config.USER_OBJECT);
 		if (mUser != null) {
 			mEtName.setText(mUser.getUsername());
-			int selection = mUser.getGender().equals("Male") ? 0 : 1;
-			mPnGender.setSelection(selection);
+			int genderSelection = mUser.getGender().equals("Male") ? 0 : 1;
+			mPnGender.setSelection(genderSelection);
 			mEtHeight.setText(String.valueOf(mUser.getHeight()));
 			mEtAgeFrom.setText(String.valueOf(mUser.getAgeFrom()));
 			mEtAgeTo.setText(String.valueOf(mUser.getAgeTo()));
 			mEtHairColor.setText(mUser.getHairColor());
+			
+			int index = 0;
+			for (String bodyType : mBodyTypes) {
+				if (bodyType.equals(mUser.getBodyType())) {
+					mPnBodyType.setSelection(index);
+				}
+				index += 1;
+			}
+			
 			mEtComment.setText(mUser.getComment());
 		}
 		
@@ -104,6 +115,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 				user.setAgeFrom(Integer.parseInt(mEtAgeFrom.getText().toString().trim()));
 				user.setAgeTo(Integer.parseInt(mEtAgeTo.getText().toString().trim()));
 				user.setHairColor(mEtHairColor.getText().toString().trim());
+				user.setBodyType(mPnBodyType.getSelectedItem().toString());
 				user.setComment(mEtComment.getText().toString().trim());
 				
 				long result = -1;
@@ -124,6 +136,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 					mUser.setAgeFrom(Integer.parseInt(mEtAgeFrom.getText().toString().trim()));
 					mUser.setAgeTo(Integer.parseInt(mEtAgeTo.getText().toString().trim()));
 					mUser.setHairColor(mEtHairColor.getText().toString().trim());
+					mUser.setBodyType(mPnBodyType.getSelectedItem().toString());
 					mUser.setComment(mEtComment.getText().toString().trim());
 					result = mUserDataSource.updateUser(mUser);
 					if (result != -1) {

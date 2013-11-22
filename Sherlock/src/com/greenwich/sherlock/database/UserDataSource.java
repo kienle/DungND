@@ -83,6 +83,7 @@ public class UserDataSource {
 		user.setAgeFrom(cursor.getInt(cursor.getColumnIndex(User.COLUMN_AGE_FROM)));
 		user.setAgeTo(cursor.getInt(cursor.getColumnIndex(User.COLUMN_AGE_TO)));
 		user.setHairColor(cursor.getString(cursor.getColumnIndex(User.COLUMN_HAIR_COLOR)));
+		user.setBodyType(cursor.getString(cursor.getColumnIndex(User.COLUMN_BODY_TYPE)));
 		user.setComment(cursor.getString(cursor.getColumnIndex(User.COLUMN_COMMENT)));
 		return user;
 	}

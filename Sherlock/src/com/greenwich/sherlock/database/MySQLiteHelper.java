@@ -23,6 +23,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 			+ User.COLUMN_AGE_FROM + " int not null, "
 			+ User.COLUMN_AGE_TO + " int not null, "
 			+ User.COLUMN_HAIR_COLOR + " text not null, "
+			+ User.COLUMN_BODY_TYPE + " text not null, "
 			+ User.COLUMN_COMMENT + " int not null);";
 	
 	private static final String CREATE_USER_LOCATION = "create table " + UserLocation.TABLE_NAME
