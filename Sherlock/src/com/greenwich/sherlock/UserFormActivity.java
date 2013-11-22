@@ -1,5 +1,6 @@
 package com.greenwich.sherlock;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class UserFormActivity extends Activity implements OnClickListener {
 	private UserDataSource mUserDataSource;
 	private Toast mToast;
 	
+	@SuppressLint("ShowToast")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -46,7 +48,6 @@ public class UserFormActivity extends Activity implements OnClickListener {
 		mUserDataSource.open();
 		
 		mEtName = (EditText) findViewById(R.id.etName);
-//		mEtGender = (EditText) findViewById(R.id.etGender);
 		mEtHeight = (EditText) findViewById(R.id.etHeight);
 		mEtAgeFrom = (EditText) findViewById(R.id.etAgeFrom);
 		mEtAgeTo = (EditText) findViewById(R.id.etAgeTo);
@@ -61,16 +62,6 @@ public class UserFormActivity extends Activity implements OnClickListener {
                 this, R.array.gender, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mPnGender.setAdapter(adapter);
-//        mPnGender.setOnItemSelectedListener(
-//                new OnItemSelectedListener() {
-//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-////                        showToast("Spinner1: position=" + position + " id=" + id);
-//                    }
-//
-//                    public void onNothingSelected(AdapterView<?> parent) {
-////                        showToast("Spinner1: unselected");
-//                    }
-//                });
         
 		Intent intent = getIntent();
 		
@@ -85,7 +76,6 @@ public class UserFormActivity extends Activity implements OnClickListener {
 			mEtName.setText(mUser.getUsername());
 			int selection = mUser.getGender().equals("Male") ? 0 : 1;
 			mPnGender.setSelection(selection);
-//			mEtGender.setText(mUser.getGender());
 			mEtHeight.setText(String.valueOf(mUser.getHeight()));
 			mEtAgeFrom.setText(String.valueOf(mUser.getAgeFrom()));
 			mEtAgeTo.setText(String.valueOf(mUser.getAgeTo()));

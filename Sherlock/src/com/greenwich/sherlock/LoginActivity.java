@@ -44,7 +44,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				Intent intent = new Intent(LoginActivity.this, SearchListActivity.class);
 				startActivity(intent);
 			} else {
-				Toast.makeText(LoginActivity.this, "Username or password is invalid!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(LoginActivity.this, "Username or Password is invalid!", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

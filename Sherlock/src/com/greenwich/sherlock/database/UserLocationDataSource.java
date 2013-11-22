@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.greenwich.sherlock.entity.User;
 import com.greenwich.sherlock.entity.UserLocation;
 
 public class UserLocationDataSource {

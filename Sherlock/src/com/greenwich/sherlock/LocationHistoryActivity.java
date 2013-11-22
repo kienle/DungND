@@ -38,7 +38,6 @@ public class LocationHistoryActivity extends Activity implements OnItemClickList
 		
 		mLvHistory = (ListView) findViewById(R.id.lvHistory);
 		mLvHistory.setOnItemClickListener(this);
-//		mHistoryAdapter = new LocationHistoryAdapter(this, mUserLocations);
 		
 		Intent intent = getIntent();
 		if (intent == null) {
